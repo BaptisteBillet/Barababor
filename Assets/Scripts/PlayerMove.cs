@@ -3,45 +3,83 @@ using System.Collections;
 
 public class PlayerMove : MonoBehaviour {
 
+    // If the player can move his ship
     bool m_CanMove;
 
-    #region Input
-    bool m_IsUsingGamePad;
+    // If the ship is currently moving
+    bool m_IsMoving;
+    // If the ship is currently Rotating to the left
+    bool m_IsRotatingLeft;
+    // If the ship is currently Rotating to the right
+    bool m_IsRotatingRight;
 
-    public bool m_Up;
-    public bool m_Down;
-    public bool m_Left;
-    public bool m_Right;
+    #region Input
+    // If the player use the gamepad or the keyboard
+    bool m_IsUsingGamePad;
+    // Which Button the player is pushing
+    bool m_Up;
+    bool m_Down;
+    bool m_Left;
+    bool m_Right;
     #endregion 
 
+    // Stats of the ship
+    public float m_MoveSpeed;
+    public float m_MoveMaxSpeed;
+    public float m_RotateSpeed;
+    public float m_DegreMax;
 
+
+  
+    //Components
+    Rigidbody m_Rigidbody;
+    public Animator m_MeshAnimator;
+
+    //References
+    PlayerCameraBehavior m_PlayerCameraBehavior;
 
     // Use this for initialization
     void Start ()
     {
         #region Initialisation
-
+       
+        //Members
         m_CanMove = true;
         m_IsUsingGamePad = false;
+
+        m_IsMoving=false;
+        m_IsRotatingLeft=false;
+        m_IsRotatingRight=false;
+
+        //Components
+        m_Rigidbody = GetComponent<Rigidbody>();
+
+        //References
+        m_PlayerCameraBehavior = GetComponent<PlayerCameraBehavior>();
+
         #endregion
     }
 
     // Update is called once per frame
     void Update () {
+
+        //InputDetection for etablish which button is pushed 
         InputDetection();
-    }
 
+        //Define Direction for applying the speed or the transform and the camera mouvement
+        DefineDirection();
 
-    // Update is called once per frame
-    void FixedUpdate()
-    {
-       
+        // Move the ship
+        m_Rigidbody.velocity = transform.forward * m_MoveSpeed;
+        
+        //Play the animations
+        AnimationOnTheMesh();
+
     }
 
 
     void InputDetection()
     {
-
         #region Gamepad
         if (Input.GetAxis("L_XAxis_1") < 0)
         {
@@ -93,7 +131,6 @@ public class PlayerMove : MonoBehaviour {
             m_Down = false;
         }
         #endregion
-
 
         #region Keyboard
         if (Input.GetKey("up") || Input.GetKey(KeyCode.Z))
@@ -147,9 +184,79 @@ public class PlayerMove : MonoBehaviour {
             m_Right = false;
         }
         #endregion
+    }
+
+    void DefineDirection()
+    {
+        //Front or back
+        if (m_Up || m_Down)
+        {
+            
+            if (m_Up == true)
+            {
+                m_MoveSpeed = m_MoveMaxSpeed;
+            }
+            if (m_Down == true)
+            {
+                m_MoveSpeed = m_MoveMaxSpeed * -1;
+            }
+
+            m_IsMoving = true;
+
+        }
+        else
+        {
+            m_IsMoving = false;
+            m_Rigidbody.velocity = Vector3.zero;
+            m_MoveSpeed = 0;
+        }
+
+        if (m_Left ^ m_Right)
+        {
+            if (m_Left && !m_Right)
+            {
+                transform.Rotate(Vector3.down, m_RotateSpeed * Time.deltaTime);
+                m_IsRotatingLeft = true;
+                m_IsRotatingRight = false;
+
+                //Camera to the left
+                m_PlayerCameraBehavior.MoveCameraToLeft();
+
+            }
+
+            if (!m_Left && m_Right)
+            {
+                transform.Rotate(Vector3.up, m_RotateSpeed * Time.deltaTime);
+                m_IsRotatingLeft = false;
+                m_IsRotatingRight = true;
+
+                //Camera to the right
+                m_PlayerCameraBehavior.MoveCameraToRight();
+            }
+        }
+        else
+        {
+            m_IsRotatingLeft = false;
+            m_IsRotatingRight = false;
+
+            //Camera to the idle
+            m_PlayerCameraBehavior.MoveCameraToIdle();
+        }
+
+
+
+
 
 
     }
+
+    void AnimationOnTheMesh()
+    {
+        m_MeshAnimator.SetBool("IsMoving", m_IsMoving);
+        m_MeshAnimator.SetBool("Left", m_IsRotatingLeft);
+        m_MeshAnimator.SetBool("Right", m_IsRotatingRight);
+    }
+  
 
 
 }

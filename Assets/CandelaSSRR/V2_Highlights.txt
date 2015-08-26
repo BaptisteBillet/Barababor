@@ -1,0 +1,27 @@
+PLEASE READ THE INCLUDED USER MANUAL FOR FURTHER IMPORTANT INFORMATION
+
+What's NEW in Candela SSRR V2
+
+Candela SSRR V2 is now completely Physically correct in all respects. Increasing quality and performance significantly while making it easier to integrate into your projects. The general work flow paradigm is now based on PBS principals regardless if you are using the New Unity 5 Standard shaders or the legacy shaders.
+
+Comprehensive & Complete support for Unity 5 Professional & Personal, which means it works with ALL Render Paths and Shaders, with support for almost all platforms. OpenGL, DirectX 9, DirectX 11. New Deferred Shading, Forward Rendering and Legacy Deferred Lighting.
+
+Across the board minimum 2 - 6X Times Performance Increase! now also possible to use with new Mobile platforms supporting OpenGLES 3.0
+
+New Physically correct Convolution - no more slow and incorrect Bilateral Blur! Very closely matching Unity 5 PBS / IBL and Reflection probe convolution for correct blending. Multiple performance options can now be easily selected suitable for your project withing the new Editor Inspector GUI.
+
+SSR Shimmer Reduction & Highlight Compression! i.e. Physically Based shading (PBS) such as the one utilized by Unity 5 is susceptible to high frequency highlight shimmer primarily caused by very high specular values. Screen Space Reflections can intensify this as sub-pixel motion increases. Also as roughness becomes high (more blurry), these sub-pixel highlights will cause distracting low - mid frequency shimmer during convolution. Candela V2 reduces this significantly.
+
+PBS Metallic & Specular Color now effect SSR reflection Color! Occlusion Chanel can also be used when activated in the standard (or standard specular) shader.
+
+New & much improved Physically Based Compose blend mode - Candela SSRR V2 uses a new cleaner 'Masking' Texture to compose SSR on top of the scene making it much more Physically plausible than just ' additive blend ' with the visible scene. Now, dark reflections or scene objects in shadow will reflect correctly. Specular highlights from shading can now be masked by reflected visibility (to a certain extend in screen-space).
+
+SSR Fresnel is now based on per-pixel Schlick & BRDF importance sampling
+
+Roughness values or textures correctly contribute to glossiness (roughness blur and grazing angle blur) i.e. Perfect mirror reflections are maintained at low roughness ( which means no blur on contact reflections) and progressively increase glossiness as roughness increases (while respecting graze angles)
+
+Cleaner and leaner inspector UI which is much more intuitive with Performance & Quality target selections right at the top making it a breeze to use.
+
+When Using MSAA in Forward render mode, reflections will no longer need to be flipped
+
+
