@@ -3,9 +3,6 @@ using System.Collections;
 
 public class PlayerMove : MonoBehaviour {
 
-    // If the player can move his ship
-    bool m_CanMove;
-
     // If the ship is currently moving
     bool m_IsMoving;
     // If the ship is currently Rotating to the left
@@ -35,46 +32,50 @@ public class PlayerMove : MonoBehaviour {
     Rigidbody m_Rigidbody;
     public Animator m_MeshAnimator;
 
+
     //References
+    Ship m_Ship;
     PlayerCameraBehavior m_PlayerCameraBehavior;
 
     // Use this for initialization
     void Start ()
     {
         #region Initialisation
-       
+        //Components
+        m_Rigidbody = GetComponent<Rigidbody>();
+
+        //References
+        m_Ship = GetComponent<Ship>();
+        m_PlayerCameraBehavior = GetComponent<PlayerCameraBehavior>();
+
         //Members
-        m_CanMove = true;
         m_IsUsingGamePad = false;
 
         m_IsMoving=false;
         m_IsRotatingLeft=false;
         m_IsRotatingRight=false;
 
-        //Components
-        m_Rigidbody = GetComponent<Rigidbody>();
-
-        //References
-        m_PlayerCameraBehavior = GetComponent<PlayerCameraBehavior>();
-
+      
         #endregion
     }
 
     // Update is called once per frame
     void Update () {
 
-        //InputDetection for etablish which button is pushed 
-        InputDetection();
+        if(m_Ship.m_CanMove==true)
+        {
+            //InputDetection for etablish which button is pushed 
+            InputDetection();
 
-        //Define Direction for applying the speed or the transform and the camera mouvement
-        DefineDirection();
+            //Define Direction for applying the speed or the transform and the camera mouvement
+            DefineDirection();
 
-        // Move the ship
-        m_Rigidbody.velocity = transform.forward * m_MoveSpeed;
-        
-        //Play the animations
-        AnimationOnTheMesh();
+            // Move the ship
+            m_Rigidbody.velocity = transform.forward * m_MoveSpeed;
 
+            //Play the animations
+            AnimationOnTheMesh();
+        }
     }
 
 
@@ -201,6 +202,12 @@ public class PlayerMove : MonoBehaviour {
                 m_MoveSpeed = m_MoveMaxSpeed * -1;
             }
 
+            //If the ship is damn
+            if(m_Ship.m_IsDamn==true)
+            {
+                m_MoveSpeed = m_MoveSpeed * -1;
+            }
+
             m_IsMoving = true;
 
         }
@@ -213,25 +220,52 @@ public class PlayerMove : MonoBehaviour {
 
         if (m_Left ^ m_Right)
         {
-            if (m_Left && !m_Right)
+            //If the ship is damn
+            if (m_Ship.m_IsDamn == true)
             {
-                transform.Rotate(Vector3.down, m_RotateSpeed * Time.deltaTime);
-                m_IsRotatingLeft = true;
-                m_IsRotatingRight = false;
+                if (!m_Left && m_Right)
+                {
+                    transform.Rotate(Vector3.down, m_RotateSpeed * Time.deltaTime);
+                    m_IsRotatingLeft = true;
+                    m_IsRotatingRight = false;
 
-                //Camera to the left
-                m_PlayerCameraBehavior.MoveCameraToLeft();
+                    //Camera to the left
+                    m_PlayerCameraBehavior.MoveCameraToLeft();
 
+                }
+
+                if (m_Left && !m_Right)
+                {
+                    transform.Rotate(Vector3.up, m_RotateSpeed * Time.deltaTime);
+                    m_IsRotatingLeft = false;
+                    m_IsRotatingRight = true;
+
+                    //Camera to the right
+                    m_PlayerCameraBehavior.MoveCameraToRight();
+                }
             }
-
-            if (!m_Left && m_Right)
+            else
             {
-                transform.Rotate(Vector3.up, m_RotateSpeed * Time.deltaTime);
-                m_IsRotatingLeft = false;
-                m_IsRotatingRight = true;
+                if (m_Left && !m_Right)
+                {
+                    transform.Rotate(Vector3.down, m_RotateSpeed * Time.deltaTime);
+                    m_IsRotatingLeft = true;
+                    m_IsRotatingRight = false;
 
-                //Camera to the right
-                m_PlayerCameraBehavior.MoveCameraToRight();
+                    //Camera to the left
+                    m_PlayerCameraBehavior.MoveCameraToLeft();
+
+                }
+
+                if (!m_Left && m_Right)
+                {
+                    transform.Rotate(Vector3.up, m_RotateSpeed * Time.deltaTime);
+                    m_IsRotatingLeft = false;
+                    m_IsRotatingRight = true;
+
+                    //Camera to the right
+                    m_PlayerCameraBehavior.MoveCameraToRight();
+                }
             }
         }
         else

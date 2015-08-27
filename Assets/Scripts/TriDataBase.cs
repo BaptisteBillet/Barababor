@@ -4,25 +4,6 @@ using System.Collections.Generic;
 
 public class TriDataBase : MonoBehaviour
 {
-    #region Singleton
-    static private TriDataBase s_Instance;
-    static public TriDataBase instance
-    {
-        get
-        {
-            return s_Instance;
-        }
-    }
-
-    void Awake()
-    {
-        if (s_Instance == null)
-            s_Instance = this;
-        //DontDestroyOnLoad(this);
-    }
-
-    #endregion
-
     public Dictionary<string, Element> m_BowDico = new Dictionary<string, Element>();
     public Dictionary<string, Element> m_SternDico = new Dictionary<string, Element>();
     public Dictionary<string, Element> m_KeelDico = new Dictionary<string, Element>();
@@ -32,9 +13,22 @@ public class TriDataBase : MonoBehaviour
     public Dictionary<string, Equipment> m_WeaponDico = new Dictionary<string, Equipment>();
     public Dictionary<string, Equipment> m_SpecialistDico = new Dictionary<string, Equipment>();
 
-    // Use this for initialization
-    void Start()
+
+    #region Singleton
+    static private TriDataBase s_Instance;
+    static public TriDataBase instance
     {
+        get
+        {
+            return s_Instance;
+        }
+    }
+    #endregion
+    void Awake()
+    {
+        if (s_Instance == null)
+            s_Instance = this;
+        //DontDestroyOnLoad(this);
 
         #region Element
         foreach (Google2u.BOWRow row in Google2u.BOW.Instance.Rows)
@@ -173,12 +167,10 @@ public class TriDataBase : MonoBehaviour
         }
 
 
-      
 
         #endregion
 
-
-
     }
+
 
 }
