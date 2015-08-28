@@ -1,9 +1,10 @@
 ﻿using UnityEngine;
 using System.Collections;
 
+[SerializeField]
 public class State : MonoBehaviour {
 
-    public EState m_State;
+    public Ship.EState m_State;
     public int m_Value;
     public float m_Time;
     public float m_Cooldown;
@@ -16,25 +17,28 @@ public class State : MonoBehaviour {
     float m_Timer;
     float m_Delay;
 
-    void Start()
+    void OnEnable()
     {
         m_Timer = 0.1f;
         m_Delay = 1;
-
-        StartCoroutine(CStat(this));
+       
+        StartCoroutine(CStat());
     }
 
-
-    IEnumerator CStat(State stat)
+  
+    IEnumerator CStat()
     {
-        ChangeShip(true, this);
 
-        while (stat.m_Cooldown > 0)
+        ChangeShip(true);
+
+        m_Cooldown = m_Time;
+
+        while (m_Cooldown > 0)
         {
             yield return new WaitForSeconds(m_Timer);
             m_Cooldown -= m_Timer;
 
-            if (m_State == EState.INFIRE || m_State == EState.HULLBREACH)
+            if (m_State == Ship.EState.INFIRE || m_State == Ship.EState.HULLBREACH)
             {
                 m_Delay -= m_Timer;
 
@@ -47,22 +51,24 @@ public class State : MonoBehaviour {
 
             }
         }
+
         //CooldownOver
-        if(m_Ship.DeleteState(this))
+        if (m_Ship.DeleteState(this.gameObject))
         {
-            ChangeShip(false, this);
+            ChangeShip(false);
         }
+        
     }
 
-    void ChangeShip(bool IsAdd, State state)
+    void ChangeShip(bool IsAdd)
     {
         float addingValue;
-
-        switch (state.ToString())
+        
+        switch (m_State.ToString())
         {
             case"BOOSTED":
                 //Calcul of the adding value;
-                addingValue = (m_Ship.m_CSpeedBase * state.m_Value) / 100;
+                addingValue = (m_Ship.m_CSpeedBase * m_Value) / 100;
 
                 if (IsAdd)
                 { m_Ship.m_CSpeed += (int)addingValue; }
@@ -72,7 +78,7 @@ public class State : MonoBehaviour {
                
             case "SLOWED" :
                 //Calcul of the adding value;
-                addingValue = (m_Ship.m_CSpeedBase * state.m_Value) / 100;
+                addingValue = (m_Ship.m_CSpeedBase * m_Value) / 100;
 
                 if (IsAdd)
                 { m_Ship.m_CSpeed -= (int)addingValue; }
@@ -94,7 +100,7 @@ public class State : MonoBehaviour {
 
             case "CONSOLIDATED" :
                 //Calcul of the adding value;
-                addingValue = (m_Ship.m_Resistance * state.m_Value) / 100;
+                addingValue = (m_Ship.m_Resistance * m_Value) / 100;
 
                 if (IsAdd)
                 { m_Ship.m_Resistance += addingValue; }
@@ -104,7 +110,7 @@ public class State : MonoBehaviour {
 
             case "SHIELD" :
                 //Calcul of the adding value;
-                addingValue = (m_Ship.m_Shield * state.m_Value) / 100;
+                addingValue = (m_Ship.m_Shield * m_Value) / 100;
 
                 if (IsAdd)
                 { m_Ship.m_Shield += (int)addingValue; }
@@ -118,7 +124,7 @@ public class State : MonoBehaviour {
 
             case "WEAKENED" :
                 //Calcul of the adding value;
-                addingValue = (m_Ship.m_Resistance * state.m_Value) / 100;
+                addingValue = (m_Ship.m_Resistance * m_Value) / 100;
 
                 if (IsAdd)
                 { m_Ship.m_Resistance -= addingValue; }
@@ -133,7 +139,7 @@ public class State : MonoBehaviour {
 
             case "ORGANIZED" :
                 //Calcul of the adding value;
-                addingValue = (m_Ship.m_CCapacityBase * state.m_Value) / 100;
+                addingValue = (m_Ship.m_CCapacityBase * m_Value) / 100;
 
                 if (IsAdd)
                 { m_Ship.m_CCapacity += (int)addingValue; }
@@ -143,7 +149,7 @@ public class State : MonoBehaviour {
 
             case "CROWDED" :
                 //Calcul of the adding value;
-                addingValue = (m_Ship.m_CCapacityBase * state.m_Value) / 100;
+                addingValue = (m_Ship.m_CCapacityBase * m_Value) / 100;
 
                 if (IsAdd)
                 { m_Ship.m_CCapacity -= (int)addingValue; }
@@ -157,7 +163,7 @@ public class State : MonoBehaviour {
 
             case "CLAIRVOYANT" :
                 //Calcul of the adding value;
-                addingValue = (m_Ship.m_CVisionBase * state.m_Value) / 100;
+                addingValue = (m_Ship.m_CVisionBase * m_Value) / 100;
 
                 if (IsAdd)
                 { m_Ship.m_CVision += (int)addingValue; }
@@ -177,12 +183,13 @@ public class State : MonoBehaviour {
                 break;
 
             case "REFURBISHMENT" :
-                m_Ship.Refurbishment();
+                if (IsAdd)
+                { m_Ship.Refurbishment(this.gameObject);}
                 break;
 
             case "STRIKE" :
                 //Calcul of the adding value;
-                addingValue = (m_Ship.m_CCooldownBase * state.m_Value) / 100;
+                addingValue = (m_Ship.m_CCooldownBase * m_Value) / 100;
 
                 if (IsAdd)
                 { m_Ship.m_CCooldown -= (int)addingValue; }
@@ -197,7 +204,7 @@ public class State : MonoBehaviour {
 
             case "ZEAL" :
                 //Calcul of the adding value;
-                addingValue = (m_Ship.m_CCooldownBase * state.m_Value) / 100;
+                addingValue = (m_Ship.m_CCooldownBase * m_Value) / 100;
 
                 if (IsAdd)
                 { m_Ship.m_CCooldown += (int)addingValue; }
@@ -207,7 +214,7 @@ public class State : MonoBehaviour {
 
             case "MANGY" :
                 //Calcul of the adding value;
-                addingValue = (m_Ship.m_CDamageBase * state.m_Value) / 100;
+                addingValue = (m_Ship.m_CDamageBase * m_Value) / 100;
 
                 if (IsAdd)
                 { m_Ship.m_CDamage += (int)addingValue; }
@@ -216,7 +223,7 @@ public class State : MonoBehaviour {
 
             case "PACIFIST" :
                 //Calcul of the adding value;
-                addingValue = (m_Ship.m_CDamageBase * state.m_Value) / 100;
+                addingValue = (m_Ship.m_CDamageBase * m_Value) / 100;
 
                 if (IsAdd)
                 { m_Ship.m_CDamage -= (int)addingValue; }
@@ -258,7 +265,7 @@ public class State : MonoBehaviour {
 
             case "REPAIR" :
                 //Calcul of the adding value;
-                addingValue = (m_Ship.m_CRegenerationBase * state.m_Value) / 100;
+                addingValue = (m_Ship.m_CRegenerationBase * m_Value) / 100;
 
                 if (IsAdd)
                 { m_Ship.m_CRegeneration += (int)addingValue; }
@@ -267,7 +274,7 @@ public class State : MonoBehaviour {
 
             case "TERMITE":
                 //Calcul of the adding value;
-                addingValue = (m_Ship.m_CRegenerationBase * state.m_Value) / 100;
+                addingValue = (m_Ship.m_CRegenerationBase * m_Value) / 100;
 
                 if (IsAdd)
                 { m_Ship.m_CRegeneration -= (int)addingValue; }
@@ -278,6 +285,12 @@ public class State : MonoBehaviour {
                     m_Ship.m_CRegeneration = 0;
                 }
                 break;
+        }
+
+
+        if (IsAdd == false)
+        {
+            Destroy(this.gameObject);
         }
 
     }

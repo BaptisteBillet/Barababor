@@ -3,24 +3,6 @@ using System.Collections;
 
 public class TimeOfPlay : MonoBehaviour {
 
-    #region Singleton
-    static private TimeOfPlay s_Instance;
-    static public TimeOfPlay instance
-    {
-        get
-        {
-            return s_Instance;
-        }
-    }
-
-    void Awake()
-    {
-        if (s_Instance == null)
-            s_Instance = this;
-        //DontDestroyOnLoad(this);
-    }
-    #endregion
-
     public int seconds;
     public int minutes;
     public int hours;
@@ -37,20 +19,25 @@ public class TimeOfPlay : MonoBehaviour {
 	
 	IEnumerator Clock()
     {
-        yield return new WaitForSeconds(1f);
-        seconds++;
-        if(seconds>59)
+        while(this!=null)
         {
-            seconds = 0;
-
-            minutes++;
-            if(minutes>59)
+            yield return new WaitForSeconds(1f);
+            seconds++;
+            if (seconds > 59)
             {
-                minutes = 0;
-                hours++;
-            }
+                seconds = 0;
 
+                minutes++;
+                if (minutes > 59)
+                {
+                    minutes = 0;
+                    hours++;
+                }
+
+            }
+            UIManager.instance.UIClock();
         }
+       
     }
 
 }

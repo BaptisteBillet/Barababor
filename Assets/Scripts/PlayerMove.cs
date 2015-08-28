@@ -55,7 +55,8 @@ public class PlayerMove : MonoBehaviour {
         m_IsRotatingLeft=false;
         m_IsRotatingRight=false;
 
-      
+        m_MoveMaxSpeed = m_Ship.m_CSpeed / 10;
+        m_RotateSpeed = m_MoveMaxSpeed * 4;
         #endregion
     }
 
@@ -64,6 +65,9 @@ public class PlayerMove : MonoBehaviour {
 
         if(m_Ship.m_CanMove==true)
         {
+            m_MoveMaxSpeed = m_Ship.m_CSpeed / 10;
+            m_RotateSpeed = m_MoveMaxSpeed * 4;
+
             //InputDetection for etablish which button is pushed 
             InputDetection();
 
