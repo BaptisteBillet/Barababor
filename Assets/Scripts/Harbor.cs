@@ -22,7 +22,7 @@ public class Harbor : MonoBehaviour {
         while(true)//is in contact
         {
             State HarborHeal = new State();
-            HarborHeal.m_State = Ship.EState.REPAIR;
+            HarborHeal.m_State = ShipStateAndDamageBehavior.EState.REPAIR;
             //HarborHeal.m_Ship = this;
             HarborHeal.m_Time = m_TimeOfHeal;
             HarborHeal.m_Value = m_ValueOfHeal;
@@ -33,8 +33,5 @@ public class Harbor : MonoBehaviour {
 
     }
 
-	// Update is called once per frame
-	void Update () {
-	
-	}
+
 }

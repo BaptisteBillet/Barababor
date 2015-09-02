@@ -4,7 +4,7 @@ using System.Collections;
 [SerializeField]
 public class State : MonoBehaviour {
 
-    public Ship.EState m_State;
+    public ShipStateAndDamageBehavior.EState m_State;
     public int m_Value;
     public float m_Time;
     public float m_Cooldown;
@@ -38,7 +38,7 @@ public class State : MonoBehaviour {
             yield return new WaitForSeconds(m_Timer);
             m_Cooldown -= m_Timer;
 
-            if (m_State == Ship.EState.INFIRE || m_State == Ship.EState.HULLBREACH)
+            if (m_State == ShipStateAndDamageBehavior.EState.ONFIRE || m_State == ShipStateAndDamageBehavior.EState.HULLBREACH)
             {
                 m_Delay -= m_Timer;
 
@@ -53,7 +53,7 @@ public class State : MonoBehaviour {
         }
 
         //CooldownOver
-        if (m_Ship.DeleteState(this.gameObject))
+        if (m_Ship.m_ShipStateAndDamageBehavior.DeleteState(this.gameObject))
         {
             ChangeShip(false);
         }
@@ -147,7 +147,7 @@ public class State : MonoBehaviour {
 
                 break;
 
-            case "CROWDED" :
+            case "CLUTTERED" :
                 //Calcul of the adding value;
                 addingValue = (m_Ship.m_CCapacityBase * m_Value) / 100;
 
@@ -175,7 +175,7 @@ public class State : MonoBehaviour {
                
                 break;
 
-            case "INSENSIBLE" :
+            case "INSENTIENT" :
                 if (IsAdd)
                 { m_Ship.m_IsStateChangeable = false; }
                 else { m_Ship.m_IsStateChangeable = true; }
@@ -184,7 +184,7 @@ public class State : MonoBehaviour {
 
             case "REFURBISHMENT" :
                 if (IsAdd)
-                { m_Ship.Refurbishment(this.gameObject);}
+                { m_Ship.m_ShipStateAndDamageBehavior.Refurbishment(this.gameObject);}
                 break;
 
             case "STRIKE" :
@@ -212,7 +212,7 @@ public class State : MonoBehaviour {
 
                 break;
 
-            case "MANGY" :
+            case "WARHUNGRY" :
                 //Calcul of the adding value;
                 addingValue = (m_Ship.m_CDamageBase * m_Value) / 100;
 
@@ -243,7 +243,7 @@ public class State : MonoBehaviour {
 
                 break;
 
-            case "INFIRE" :
+            case "ONFIRE" :
 
                 break;
 
@@ -292,7 +292,7 @@ public class State : MonoBehaviour {
         {
             Destroy(this.gameObject);
         }
-
+        UIManager.instance.UIState();
     }
 
 

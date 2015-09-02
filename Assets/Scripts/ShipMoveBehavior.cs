@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class PlayerMove : MonoBehaviour {
+public class ShipMoveBehavior : MonoBehaviour {
 
     // If the ship is currently moving
     bool m_IsMoving;
@@ -35,7 +35,7 @@ public class PlayerMove : MonoBehaviour {
 
     //References
     Ship m_Ship;
-    PlayerCameraBehavior m_PlayerCameraBehavior;
+    ShipCameraBehavior m_PlayerCameraBehavior;
 
     // Use this for initialization
     void Start ()
@@ -46,7 +46,7 @@ public class PlayerMove : MonoBehaviour {
 
         //References
         m_Ship = GetComponent<Ship>();
-        m_PlayerCameraBehavior = GetComponent<PlayerCameraBehavior>();
+        m_PlayerCameraBehavior = GetComponent<ShipCameraBehavior>();
 
         //Members
         m_IsUsingGamePad = false;
@@ -65,6 +65,11 @@ public class PlayerMove : MonoBehaviour {
 
         if(m_Ship.m_CanMove==true)
         {
+            if(m_MeshAnimator.enabled==false)
+            {
+                m_MeshAnimator.enabled = true;
+            }
+
             m_MoveMaxSpeed = m_Ship.m_CSpeed / 10;
             m_RotateSpeed = m_MoveMaxSpeed * 4;
 
@@ -79,6 +84,12 @@ public class PlayerMove : MonoBehaviour {
 
             //Play the animations
             AnimationOnTheMesh();
+        }
+        else
+        {
+            m_MoveSpeed = 0;
+            m_Rigidbody.velocity = Vector3.zero;
+            m_MeshAnimator.enabled = false;
         }
     }
 

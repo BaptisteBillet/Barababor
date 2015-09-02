@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class PlayerCameraBehavior : MonoBehaviour {
+public class ShipCameraBehavior : MonoBehaviour {
 
     //The camera
     public Camera m_Camera;

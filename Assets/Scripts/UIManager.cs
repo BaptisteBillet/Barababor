@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 using UnityEngine.UI;
+using System.Collections.Generic;
 
 public class UIManager : MonoBehaviour {
 
@@ -34,10 +35,15 @@ public class UIManager : MonoBehaviour {
     //ExperienceBar
     public Image m_ExperienceBarFull;
     public Text m_ExperienceText;
+    public Text m_ExperienceMax;
     //States
     public Image[] m_StateImage = new Image[14];
+    public Sprite[] m_StateImageData = new Sprite[25];
+    public Sprite m_Transparent;
+    private Dictionary<string, Sprite> StateLibrary = new Dictionary<string, Sprite>();
     //Captain
     public RawImage m_CaptainFace;
+    public Text m_CaptainRespawnTimer;
     //Icone
     public Image m_Icone;
     //PlayerLevel
@@ -47,6 +53,7 @@ public class UIManager : MonoBehaviour {
     public Text m_TresorText;
     //ActionBar
     public Image[] m_ActionImage = new Image[4];
+    
     //ConsomableBar
     public Image[] m_ConsomableBar = new Image[2];
 
@@ -89,9 +96,28 @@ public class UIManager : MonoBehaviour {
     public Text m_BlueColonies;
     public Text m_BlueShipwreck;
 
+    //
+    float m_ExperienceZeroValue = -42f;
+    float m_ExperienceMaxValue = 41.8f;
+    float m_ExperiencePourcent=0.838f;
+
+    float m_LifeZeroValue = 430.4f;
+    float m_LifeMaxValue = 890.8f;
+    float m_LifePourcent = 4.604f;
+
+    float m_TresorZeroValue = 430.4f;
+    float m_TresorMaxValue = 890.8f;
+    float m_TresorPourcent = 4.604f;
 
     void Start()
     {
+        m_CaptainRespawnTimer.enabled = false;
+
+        foreach(Sprite sprite in m_StateImageData)
+        {
+            StateLibrary.Add(sprite.name, sprite);
+            
+        }
         Initialization();
     }
 
@@ -99,10 +125,7 @@ public class UIManager : MonoBehaviour {
     {
         m_BlueColonies.text = Game.instance.m_BlueColonies.ToString();
         m_PurpleColonies.text = Game.instance.m_PurpleColonies.ToString();
-
-        m_BlueShipwreck.text = Game.instance.m_DestroyCounterGameBlue.ToString();
-        m_ExperienceText.text = "0";
-
+        
     }
 
     public void UIClock()
@@ -142,8 +165,132 @@ public class UIManager : MonoBehaviour {
         m_PurpleColonies.text = Game.instance.m_PurpleColonies.ToString();
         m_BlueColonies.text = Game.instance.m_BlueColonies.ToString();
 
-        m_Stats.text = m_Ship.m_DestroyCounter.ToString() + m_Ship.m_AssistCounter.ToString() + m_Ship.m_DeathCounter.ToString();
+        m_Stats.text = m_Ship.m_DestroyCounter.ToString()+"/"+ m_Ship.m_AssistCounter.ToString()+"/"+ m_Ship.m_DeathCounter.ToString();
 
     }
+
+    public void UIExperienceAndLeveling()
+    {   
+        if(m_Ship.m_ShipLevel<20)
+        {
+            m_PlayerLevelText.text = m_Ship.m_ShipLevel.ToString();
+            m_ExperienceText.text = m_Ship.m_ShipLevelingBehavior.m_ExperienceQuantity.ToString();
+            m_ExperienceMax.text = m_Ship.m_ShipLevelingBehavior.m_ExperienceForLevel.ToString();
+
+            float experienceLevel=0;
+
+            if (m_Ship.m_ShipLevelingBehavior.m_ExperienceQuantity>0)
+            {
+                experienceLevel = (m_Ship.m_ShipLevelingBehavior.m_ExperienceQuantity * 100) / m_Ship.m_ShipLevelingBehavior.m_ExperienceForLevel;
+            }
+            
+            m_ExperienceBarFull.transform.position = new Vector3(m_ExperienceBarFull.transform.position.x, (experienceLevel* m_ExperiencePourcent)+ m_ExperienceZeroValue, m_ExperienceBarFull.transform.position.z);
+
+        }
+        else
+        {
+            UIExperienceAndLevelingEnd();
+        }
+
+       
+
+    }
+    public void UIExperienceAndLevelingEnd()
+    {
+        m_PlayerLevelText.text = m_Ship.m_ShipLevel.ToString();
+        m_ExperienceText.text = "";
+        m_ExperienceBarFull.transform.position = new Vector3(m_ExperienceBarFull.transform.position.x, m_ExperienceMaxValue, m_ExperienceBarFull.transform.position.z);
+
+    }
+
+    public void UILife()
+    {
+        m_LifeText.text = m_Ship.m_CHealthPoint.ToString() + " / " + m_Ship.m_CHealthPointBase.ToString();
+
+        float barLevel = 0;
+        if (m_Ship.m_CHealthPoint>0)
+        {
+            barLevel = (m_Ship.m_CHealthPoint * 100) / m_Ship.m_CHealthPointBase;
+            m_LifeBarFull.transform.position = new Vector3((barLevel*m_LifePourcent)+m_LifeZeroValue, m_LifeBarFull.transform.position.y, m_LifeBarFull.transform.position.z);
+        }
+        else
+        {
+            m_LifeBarFull.transform.position = new Vector3(m_LifeZeroValue, m_LifeBarFull.transform.position.y, m_LifeBarFull.transform.position.z);
+        }
+
+    }
+    public void UITresor()
+    {
+        m_TresorText.text = m_Ship.m_CCapacity.ToString() + " / " + m_Ship.m_CCapacityBase.ToString();
+
+        
+        float barLevel = 0;
+        if (m_Ship.m_CCapacity > 0)
+        {
+            barLevel = (m_Ship.m_CCapacity * 100) / m_Ship.m_CCapacityBase;
+            m_TresorBarFull.transform.position = new Vector3((barLevel * m_TresorPourcent) + m_TresorZeroValue, m_TresorBarFull.transform.position.y, m_TresorBarFull.transform.position.z);
+        }
+        else
+        {
+            m_TresorBarFull.transform.position = new Vector3(m_TresorZeroValue, m_TresorBarFull.transform.position.y, m_TresorBarFull.transform.position.z);
+        }
+        
+    }
+
+    public void UIRespawnTimer()
+    {
+        if(m_CaptainRespawnTimer.enabled == false)
+        {
+            m_CaptainRespawnTimer.enabled = true;
+        }
+        
+        if (m_Ship.m_ShipDeathBehavior.m_RespawnTimeMinutes< 10)
+        {
+            if (m_Ship.m_ShipDeathBehavior.m_RespawnTimeSecondes < 10)
+            {
+                m_CaptainRespawnTimer.text = "0" + m_Ship.m_ShipDeathBehavior.m_RespawnTimeMinutes + ":" + "0" + m_Ship.m_ShipDeathBehavior.m_RespawnTimeSecondes;
+            }
+            else
+            {
+                m_CaptainRespawnTimer.text = "0" + m_Ship.m_ShipDeathBehavior.m_RespawnTimeMinutes + ":" + m_Ship.m_ShipDeathBehavior.m_RespawnTimeSecondes;
+            }
+        }
+        else
+        {
+            if (Game.instance.m_TimeOfPlay.seconds < 10)
+            {
+                m_CaptainRespawnTimer.text = m_Ship.m_ShipDeathBehavior.m_RespawnTimeMinutes + ":" + "0" + m_Ship.m_ShipDeathBehavior.m_RespawnTimeSecondes;
+            }
+            else
+            {
+                m_CaptainRespawnTimer.text = m_Ship.m_ShipDeathBehavior.m_RespawnTimeMinutes + ":" + m_Ship.m_ShipDeathBehavior.m_RespawnTimeSecondes;
+            }
+        }
+
+        if(m_Ship.m_ShipDeathBehavior.m_RespawnTimeMinutes==0 && m_Ship.m_ShipDeathBehavior.m_RespawnTimeSecondes==0)
+        {
+            m_CaptainRespawnTimer.enabled = false;
+        }
+
+    }
+
+    public void UIState()
+    {
+
+
+
+        //for all the object in the shipstate list
+        for(int i=0; i<m_Ship.m_ShipStateAndDamageBehavior.m_ListState.Count;i++)
+        {
+            if (i<14)
+            {
+                m_StateImage[i].sprite = m_Transparent;
+                m_StateImage[i].sprite = StateLibrary[m_Ship.m_ShipStateAndDamageBehavior.m_ListState[i].name];
+            }
+        }
+    }
+
+
+
 }
 
