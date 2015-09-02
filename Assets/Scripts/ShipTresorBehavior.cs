@@ -18,6 +18,8 @@ public class ShipTresorBehavior : MonoBehaviour {
     bool m_ChargingTresor;
     float m_DelayForCharging = 0.5f;
 
+    public Harbor m_Harbor;
+
     // Use this for initialization
     void Start ()
     {
@@ -41,8 +43,23 @@ public class ShipTresorBehavior : MonoBehaviour {
     {
         if (m_Ship.m_CCapacity<m_Ship.m_CCapacityBase)
         {
-            m_Ship.m_CCapacity++;
-            UIManager.instance.UITresor();
+            //If Harbor
+            if(m_Ship.m_NearFromHomeHarbor)
+            {
+                if (m_Harbor.m_TresorsNumbers > 0)
+                {
+                    m_Ship.m_CCapacity++;
+                    m_Harbor.m_TresorsNumbers--;
+                    UIManager.instance.ActualizeUITresor();
+
+                }
+            }
+            else
+            {
+                m_Ship.m_CCapacity++;
+                UIManager.instance.ActualizeUITresor();
+            }
+           
         }
     }
 
@@ -50,9 +67,19 @@ public class ShipTresorBehavior : MonoBehaviour {
     {
         if (m_Ship.m_CCapacity > 0)
         {
-            Instantiate(m_TresorPrefab, m_EjectPosition.position, m_TresorPrefab.transform.rotation);
-            m_Ship.m_CCapacity--;
-            UIManager.instance.UITresor();
+            if(m_Ship.m_NearFromHomeHarbor==false)
+            {
+                Instantiate(m_TresorPrefab, m_EjectPosition.position, m_TresorPrefab.transform.rotation);
+                m_Ship.m_CCapacity--;
+                UIManager.instance.ActualizeUITresor();
+            }
+            else
+            {
+                m_Ship.m_CCapacity--;
+                m_Harbor.m_TresorsNumbers++;
+                UIManager.instance.ActualizeUITresor();
+                
+            }
         }
     }
 
@@ -66,7 +93,7 @@ public class ShipTresorBehavior : MonoBehaviour {
 
     public void DeliverTresor()
     {
-        UIManager.instance.UITresor();
+        UIManager.instance.ActualizeUITresor();
     }
 
     public void HullBreach(float time)
@@ -101,6 +128,7 @@ public class ShipTresorBehavior : MonoBehaviour {
         //DPad Haut
         if (Input.GetAxis("DPad_YAxis_1") < 0 || Input.GetKey(KeyCode.C))
         {
+           
             if (m_Ship.m_NearFromHomeHarbor)
             {
                 if (m_ChargingTresor == false)
@@ -147,7 +175,7 @@ public class ShipTresorBehavior : MonoBehaviour {
     IEnumerator CChargingTresor()
     {
         yield return new WaitForSeconds(m_DelayForCharging);
-        while (m_ChargingTresor && m_Ship.m_CCapacity < m_Ship.m_CCapacityBase && m_Ship.m_NearFromHomeHarbor)
+        while (m_Ship.m_CCapacity < m_Ship.m_CCapacityBase && m_Ship.m_NearFromHomeHarbor && m_ChargingTresor)
         {
             AddTresor();
             yield return new WaitForSeconds(m_DelayForCharging);

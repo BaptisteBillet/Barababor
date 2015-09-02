@@ -31,7 +31,7 @@ public class ShipLevelingBehavior : MonoBehaviour {
         m_ExperienceQuantity = 0;
         m_ExperienceForLevel = m_ExperienceGap[m_Ship.m_ShipLevel + 1];
         //For UI
-        UIManager.instance.UIExperienceAndLeveling();
+        UIManager.instance.ActualizeUIExperienceAndLeveling();
     }
 
 
@@ -75,7 +75,7 @@ public class ShipLevelingBehavior : MonoBehaviour {
             }
 
             //For UI
-            UIManager.instance.UIExperienceAndLeveling();
+            UIManager.instance.ActualizeUIExperienceAndLeveling();
 
         }
     }
@@ -94,12 +94,29 @@ public class ShipLevelingBehavior : MonoBehaviour {
         else
         {
             //For UI
-            UIManager.instance.UIExperienceAndLevelingEnd();
+            UIManager.instance.ActualizeUIExperienceAndLevelingEnd();
         }
 
 
         //For UI
-        UIManager.instance.UIExperienceAndLeveling();
+        UIManager.instance.ActualizeUIExperienceAndLeveling();
     }
+
+    void Update()
+    {
+        if (Input.GetButtonDown("Back"))
+        {
+            if(UIManager.instance.m_ExperienceText.enabled==true)
+            {
+                UIManager.instance.ShowExperience(false);
+            }
+            else
+            {
+                UIManager.instance.ShowExperience(true);
+            }
+            
+        }
+    }
+
 
 }

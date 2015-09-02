@@ -34,7 +34,7 @@ public class ShipDeathBehavior : MonoBehaviour {
         m_Ship.m_CanAttack = false;
 
         m_Ship.m_CHealthPoint = 0;
-        UIManager.instance.UILife();
+        UIManager.instance.ActualizeUILife();
 
         Game.instance.AddStat(m_Ship.m_Team, "Death");
 
@@ -61,7 +61,7 @@ public class ShipDeathBehavior : MonoBehaviour {
 
     IEnumerator Respawn()
     {
-        UIManager.instance.UIRespawnTimer();
+        UIManager.instance.ActualizeUIRespawnTimer();
         while (m_RespawnTimeSecondes > 0 || m_RespawnTimeMinutes > 0)
         {
             yield return new WaitForSeconds(1f);
@@ -76,7 +76,7 @@ public class ShipDeathBehavior : MonoBehaviour {
                 }
             }
 
-            UIManager.instance.UIRespawnTimer();
+            UIManager.instance.ActualizeUIRespawnTimer();
         }
 
         m_Ship.ForceRefurbisment();

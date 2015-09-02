@@ -147,6 +147,7 @@ public class Ship : MonoBehaviour {
     //For multiples script
     public bool m_NearFromHomeHarbor;
 
+
     public void Awake()
     {
         //Component Initialisation
@@ -160,6 +161,7 @@ public class Ship : MonoBehaviour {
         m_ShipLevel = 1;
     }
 
+    
 
     // Use this for initialization
     public void Start ()
@@ -223,26 +225,33 @@ public class Ship : MonoBehaviour {
         m_CanAttack=true;
         m_Resistance=100;
         m_Shield=0;
-        UIManager.instance.UILife();
-        UIManager.instance.UITresor();
+        UIManager.instance.ActualizeUILife();
+        UIManager.instance.ActualizeUITresor();
     }
 
-   void OnTriggerStay(Collider other)
-   {  
+    void OnTriggerEnter(Collider other)
+    {
         if (other.tag == "Harbor")
         {
-            if(other.gameObject.GetComponent<Harbor>().m_IsHarborBlue==m_IsBlue)
+            if (other.gameObject.GetComponent<Harbor>().m_IsHarborBlue == m_IsBlue)
             {
                 m_NearFromHomeHarbor = true;
+                m_ShipStateAndDamageBehavior.AddState(ShipStateAndDamageBehavior.EState.HARBORREPAIR, 0, 0);
+                m_ShipTresorBehavior.m_Harbor = other.gameObject.GetComponent<Harbor>();
             }
         }
-   }
+
+    }
    void OnTriggerExit(Collider other)
    {
-       if (other.tag == "Harbor")
-       {
-           m_NearFromHomeHarbor = false;
-       }
-   }
+        if (other.tag == "Harbor")
+        {
+            if (other.gameObject.GetComponent<Harbor>().m_IsHarborBlue == m_IsBlue)
+            {
+                m_NearFromHomeHarbor = false;
+            }
+        }
+
+  }
 
 }

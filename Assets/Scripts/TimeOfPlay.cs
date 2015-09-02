@@ -35,7 +35,7 @@ public class TimeOfPlay : MonoBehaviour {
                 }
 
             }
-            UIManager.instance.UIClock();
+            UIManager.instance.ActualizeUIClock();
         }
        
     }

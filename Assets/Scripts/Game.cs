@@ -69,7 +69,7 @@ public class Game : MonoBehaviour {
     // Use this for initialization
     void Start ()
     {
-        UIManager.instance.UIStatGeneral();
+        UIManager.instance.ActualizeUIStatGeneral();
     }
     
     public void AddStat(string camp, string stat)
@@ -105,7 +105,7 @@ public class Game : MonoBehaviour {
             }
         }
 
-        UIManager.instance.UIStatGeneral();
+        UIManager.instance.ActualizeUIStatGeneral();
 
     }
 

@@ -2,6 +2,7 @@
 using System.Collections;
 using UnityStandardAssets.ImageEffects;
 
+
 public class CameraEffect : MonoBehaviour
 {
     #region Members
@@ -24,6 +25,9 @@ public class CameraEffect : MonoBehaviour
 
     }
 
+    /// <summary>
+    /// Called when [destroy].
+    /// </summary>
     void OnDestroy()
     {
 		CameraEventManager.onEvent -= Effect;
@@ -31,20 +35,30 @@ public class CameraEffect : MonoBehaviour
 
 
     // iTween.ShakePosition(gameObject, new Vector3(1, 1, 0), 1);
+
+    /// <summary>
+    /// Effects the specified emt.
+    /// </summary>
+    /// <param name="emt">The emt.</param>
     void Effect(EventManagerType emt)
     {
        
         switch (emt)
         {
             case  EventManagerType.FISHEYEBUMP:
-                StartCoroutine(fisheyemanager());
+                StartCoroutine(StartToFisheye());
                 break;
         }
 
     }
 
 
-	IEnumerator fisheyemanager()
+
+    /// <summary>
+    /// Starts to fisheye.
+    /// </summary>
+    /// <returns></returns>
+    IEnumerator StartToFisheye()
     {
 
         fisheye.enabled = true;

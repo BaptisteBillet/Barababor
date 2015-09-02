@@ -11,8 +11,11 @@ public class State : MonoBehaviour {
 
     public Ship m_Ship;
 
-    public int m_InFireValue;
-    public int m_HullBreachValue;
+    const int m_ONFIREDAMAGE=6;
+    const int m_HULLBREACHVALUE=1;
+
+    int m_OnFireValue = 0;
+    int m_HullBreachValue = 0;
 
     float m_Timer;
     float m_Delay;
@@ -21,23 +24,28 @@ public class State : MonoBehaviour {
     {
         m_Timer = 0.1f;
         m_Delay = 1;
-       
+
         StartCoroutine(CStat());
+
+       
     }
 
   
     IEnumerator CStat()
     {
-
+        //Make the changes
         ChangeShip(true);
-
+        //Reset the cooldown
         m_Cooldown = m_Time;
 
+        //Start the cooldown
         while (m_Cooldown > 0)
         {
+            //Decrement the cooldown
             yield return new WaitForSeconds(m_Timer);
             m_Cooldown -= m_Timer;
 
+            //Only for case like OnFire or HullBreach
             if (m_State == ShipStateAndDamageBehavior.EState.ONFIRE || m_State == ShipStateAndDamageBehavior.EState.HULLBREACH)
             {
                 m_Delay -= m_Timer;
@@ -45,19 +53,38 @@ public class State : MonoBehaviour {
                 if(m_Delay<=0)
                 {
                     m_Delay = 1;
-                    m_Ship.m_CHealthPoint -= m_InFireValue;
-                    m_Ship.m_CCapacity -= m_HullBreachValue;
+                    //On fire damages
+                    if(m_OnFireValue>0)
+                    {
+                        m_Ship.m_ShipStateAndDamageBehavior.TakeDamage(m_OnFireValue);
+                    }
+                    //For HullBreach
+                    if (m_HullBreachValue > 0)
+                    {
+                        m_Ship.m_ShipTresorBehavior.LooseTresor();
+                    }
                 }
 
             }
         }
 
+        //Only for HarborRepair
+        if (m_State == ShipStateAndDamageBehavior.EState.HARBORREPAIR)
+        {
+            while (m_Ship.m_NearFromHomeHarbor)
+            {
+                //Decrement the cooldown
+                yield return new WaitForSeconds(m_Timer);
+            }
+        }
+        
+        
         //CooldownOver
         if (m_Ship.m_ShipStateAndDamageBehavior.DeleteState(this.gameObject))
         {
             ChangeShip(false);
         }
-        
+        UIManager.instance.ActualizeUIState();
     }
 
     void ChangeShip(bool IsAdd)
@@ -101,16 +128,15 @@ public class State : MonoBehaviour {
             case "CONSOLIDATED" :
                 //Calcul of the adding value;
                 addingValue = (m_Ship.m_Resistance * m_Value) / 100;
-
                 if (IsAdd)
-                { m_Ship.m_Resistance += addingValue; }
-                else { m_Ship.m_Resistance -= addingValue; }
+                { m_Ship.m_Resistance -= addingValue; }
+                else { m_Ship.m_Resistance += addingValue; }
 
                 break;
 
             case "SHIELD" :
                 //Calcul of the adding value;
-                addingValue = (m_Ship.m_Shield * m_Value) / 100;
+                addingValue = m_Value;
 
                 if (IsAdd)
                 { m_Ship.m_Shield += (int)addingValue; }
@@ -127,8 +153,8 @@ public class State : MonoBehaviour {
                 addingValue = (m_Ship.m_Resistance * m_Value) / 100;
 
                 if (IsAdd)
-                { m_Ship.m_Resistance -= addingValue; }
-                else { m_Ship.m_Resistance += addingValue; }
+                { m_Ship.m_Resistance += addingValue; }
+                else { m_Ship.m_Resistance -= addingValue; }
 
                 if (m_Ship.m_CCooldown <= 0)
                 {
@@ -162,17 +188,11 @@ public class State : MonoBehaviour {
                 break;
 
             case "CLAIRVOYANT" :
-                //Calcul of the adding value;
-                addingValue = (m_Ship.m_CVisionBase * m_Value) / 100;
-
-                if (IsAdd)
-                { m_Ship.m_CVision += (int)addingValue; }
-                else { m_Ship.m_CVision -= (int)addingValue; }
-
+                m_Ship.m_ShipCameraBehavior.MoveCamera("clairvoyant");
                 break;
 
             case "DAZZLED" :
-               
+                m_Ship.m_ShipCameraBehavior.MoveCamera("dazzled");
                 break;
 
             case "INSENTIENT" :
@@ -244,11 +264,11 @@ public class State : MonoBehaviour {
                 break;
 
             case "ONFIRE" :
-
+                m_OnFireValue = m_ONFIREDAMAGE;
                 break;
 
             case "HULLBREACH" :
-
+                m_HullBreachValue = m_HULLBREACHVALUE;
                 break;
 
             case "LOCKED" :
@@ -285,6 +305,20 @@ public class State : MonoBehaviour {
                     m_Ship.m_CRegeneration = 0;
                 }
                 break;
+
+            case "HARBORREPAIR":
+                //Calcul of the adding value;
+                addingValue = (2.5f*100) / m_Ship.m_CHealthPointBase;
+
+                if (IsAdd)
+                { m_Ship.m_CRegeneration += (int)addingValue; m_Ship.m_ShipStateAndDamageBehavior.m_TimeRegeneration = 0.5f; }
+                else
+                {
+                  m_Ship.m_CRegeneration -= (int)addingValue;
+                  m_Ship.m_ShipStateAndDamageBehavior.m_TimeRegeneration = 1f;
+                }
+
+                break;
         }
 
 
@@ -292,9 +326,6 @@ public class State : MonoBehaviour {
         {
             Destroy(this.gameObject);
         }
-        UIManager.instance.UIState();
+        UIManager.instance.ActualizeUIState();
     }
-
-
-
 }

@@ -29,6 +29,7 @@ public class ShipStateAndDamageBehavior : MonoBehaviour {
         DAMN,
         REPAIR,
         TERMITE,
+        HARBORREPAIR,
         NULL
     }
 
@@ -39,10 +40,16 @@ public class ShipStateAndDamageBehavior : MonoBehaviour {
 
     Ship m_Ship;
 
+    public GameObject m_GOState;
+    State m_State;
+
+    [HideInInspector]
+    public float m_TimeRegeneration=1;
+
     void Start()
     {
         m_Ship = GetComponent<Ship>();
-
+        m_State = m_GOState.GetComponent<State>();
         //Start of the regeneration
         StartCoroutine(AutoRegeneration());
     }
@@ -201,28 +208,72 @@ public class ShipStateAndDamageBehavior : MonoBehaviour {
 
         }
 
-
+        UIManager.instance.ActualizeUIState();
 
         //Feedback reinitialization
     }
 
 
     //Commons Methods
-    public void AddState(GameObject newState)
+    public void AddState(EState type,int value, float time)
     {
-        State m_newState = newState.GetComponent<State>();
+        m_State.m_State = type;
+        m_State.m_Value = value;
+        m_State.m_Time = time;
+
+        //in case of Insentient
+        if (m_Ship.m_IsStateChangeable==false)
+        {
+            if(m_State.m_State==EState.SLOWED || m_State.m_State == EState.WEAKENED || m_State.m_State == EState.CLUTTERED || m_State.m_State == EState.DAZZLED
+                || m_State.m_State == EState.STRIKE || m_State.m_State == EState.PACIFIST || m_State.m_State == EState.CEASEFIRE || m_State.m_State == EState.ONFIRE
+                || m_State.m_State == EState.HULLBREACH || m_State.m_State == EState.LOCKED || m_State.m_State == EState.DAMN || m_State.m_State == EState.TERMITE)
+            {
+                return;
+            }
+        }
+
+        //in case of Dazzled or clairvoyance
+        if (m_State.m_State == EState.CLAIRVOYANT && m_Ship.m_ShipCameraBehavior.IsDazzled)
+        {
+            for (int i = 0; i < m_ListState.Count; i++)
+            {
+                State m_listState = m_ListState[i].GetComponent<State>();
+                if((m_listState.m_State == EState.DAZZLED))
+                {
+                    DeleteState(m_ListState[i]);
+                    m_Ship.m_ShipCameraBehavior.MoveCamera("dazzled");
+                    break;
+                }
+            }
+            return;
+        }
+        if (m_State.m_State == EState.DAZZLED && m_Ship.m_ShipCameraBehavior.IsClairvoyant)
+        {
+            for (int i = 0; i < m_ListState.Count; i++)
+            {
+                State m_listState = m_ListState[i].GetComponent<State>();
+                if ((m_listState.m_State == EState.CLAIRVOYANT))
+                {
+                    DeleteState(m_ListState[i]);
+                    m_Ship.m_ShipCameraBehavior.MoveCamera("clairvoyant");
+                    break;
+                }
+            }
+            return;
+        }
+
         bool IsOk = false;
         for (int i = 0; i < m_ListState.Count; i++)
         {
             State m_listState = m_ListState[i].GetComponent<State>();
             //If the search match
-            if (m_newState.m_State == m_listState.m_State)
+            if (m_State.m_State == m_listState.m_State)
             {
                 //In case of the same value is found
-                if (m_newState.m_Value == m_listState.m_Value)
+                if (m_State.m_Value == m_listState.m_Value)
                 {
                     //If the time need to be reinitialize
-                    if (m_listState.m_Time >= m_newState.m_Time)
+                    if (m_listState.m_Time >= m_State.m_Time)
                     {
                         //Reinitialize with the first Time
                         m_listState.m_Cooldown = m_listState.m_Time;
@@ -233,7 +284,7 @@ public class ShipStateAndDamageBehavior : MonoBehaviour {
                     else
                     {
                         //Reinitialize with the second Time
-                        m_listState.m_Cooldown = m_newState.m_Time;
+                        m_listState.m_Cooldown = m_State.m_Time;
                         IsOk = true;
                         //Feedback reinitialization
                         break;
@@ -245,78 +296,99 @@ public class ShipStateAndDamageBehavior : MonoBehaviour {
         if (IsOk == false)
         {
             //Change the ship to be this one;
-            m_newState.m_Ship = m_Ship;
-            m_ListState.Add(Instantiate(newState));
+            m_State.m_Ship = m_Ship;
+            m_ListState.Add(Instantiate(m_GOState));
 
             //Feedback new state
         }
 
-        UIManager.instance.UIState();
-
+        UIManager.instance.ActualizeUIState();
     }
+
+
 
     public bool DeleteState(GameObject stateToErase)
     {
-
         for (int i = 0; i < m_ListState.Count; i++)
         {
 
             if (m_ListState[i] == stateToErase)
             {
                 m_ListState.RemoveAt(i);
-                UIManager.instance.UIState();
+                UIManager.instance.ActualizeUIState();
                 return true;
             }
         }
-        UIManager.instance.UIState();
+        UIManager.instance.ActualizeUIState();
         return false;
     }
+    /*
+    public bool DeleteState(EState stateToErase)
+    {
+        for (int i = 0; i < m_ListState.Count; i++)
+        {
+            State stateScript = m_ListState[i].GetComponent<State>();
+            if (stateScript.m_State == stateToErase)
+            {
+                m_ListState.RemoveAt(i);
+                UIManager.instance.ActualizeUIState();
+                return true;
+            }
+        }
+        UIManager.instance.ActualizeUIState();
+        return false;
+    }*/
+
 
     public void TakeDamage(int damage)
     {
-        //Feedback touched!
-        //Calcul of the shield
-        //if the damage are bigger than the shield
-        if (damage >= m_Ship.m_Shield)
+        if (m_Ship.m_IsDamageable)
         {
-            //The shield is destroy
-            m_Ship.m_Shield = 0;
-            //Feedback shield destroy
-
-            //The damage are reduces
-            damage -= m_Ship.m_Shield;
-        }
-        else
-        {
-            //The shield is reduce, no damages
-            m_Ship.m_Shield -= damage;
-            damage = 0;
-        }
-
-        //If they are damages
-        if (damage > 0)
-        {
-            damage = (int)((damage * (m_Ship.m_Resistance)) / 100);
-        }
-
-        //If they are damages
-        if (damage > 0)
-        {
-            //Feedback damages
-            //CameraEventManager.emit(EventManagerType.FISHEYEBUMP);
-
-            m_Ship.m_CHealthPoint -= damage;
-
-            if (m_Ship.m_CHealthPoint <= 0)
+            //Feedback touched!
+            //Calcul of the shield
+            //if the damage are bigger than the shield
+            if (damage >= m_Ship.m_Shield)
             {
-                m_Ship.m_CHealthPoint = 0;
+                //The damage are reduces
+                damage -= m_Ship.m_Shield;
 
-                m_Ship.m_ShipDeathBehavior.Die();
+                //The shield is destroy
+                m_Ship.m_Shield = 0;
+                //Feedback shield destroy
+
+                
             }
+            else
+            {
+                //The shield is reduce, no damages
+                m_Ship.m_Shield -= damage;
+                damage = 0;
+            }
+
+            //If they are damages
+            if (damage > 0)
+            {
+                damage = (int)((damage * (m_Ship.m_Resistance)) / 100);
+            }
+
+            //If they are damages
+            if (damage > 0)
+            {
+                //Feedback damages
+                //CameraEventManager.emit(EventManagerType.FISHEYEBUMP);
+
+                m_Ship.m_CHealthPoint -= damage;
+
+                if (m_Ship.m_CHealthPoint <= 0)
+                {
+                    m_Ship.m_CHealthPoint = 0;
+
+                    m_Ship.m_ShipDeathBehavior.Die();
+                }
+            }
+
+            UIManager.instance.ActualizeUILife();
         }
-
-        UIManager.instance.UILife();
-
     }
 
 
@@ -328,7 +400,7 @@ public class ShipStateAndDamageBehavior : MonoBehaviour {
         {
             while (m_Ship.m_IsDead == false)
             {
-                yield return new WaitForSeconds(1f);
+                yield return new WaitForSeconds(m_TimeRegeneration);
                 if(m_Ship.m_IsDead == false)
                 {
                     if (m_Ship.m_CHealthPoint < m_Ship.m_CHealthPointBase)
@@ -340,7 +412,7 @@ public class ShipStateAndDamageBehavior : MonoBehaviour {
                     {
                         m_Ship.m_CHealthPoint = m_Ship.m_CHealthPointBase;
                     }
-                    UIManager.instance.UILife();
+                    UIManager.instance.ActualizeUILife();
                 }
                 
             }
@@ -348,6 +420,9 @@ public class ShipStateAndDamageBehavior : MonoBehaviour {
         }
 
     }
+
+
+
 
 
 }

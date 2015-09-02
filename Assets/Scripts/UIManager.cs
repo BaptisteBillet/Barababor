@@ -28,6 +28,9 @@ public class UIManager : MonoBehaviour {
 
     public Ship m_Ship;
 
+    #region Members declaration
+
+
     //PLAYER SPACE
     //LifeBar
     public Image m_LifeBarFull;
@@ -36,6 +39,7 @@ public class UIManager : MonoBehaviour {
     public Image m_ExperienceBarFull;
     public Text m_ExperienceText;
     public Text m_ExperienceMax;
+    public Text m_ExperienceSlash;
     //States
     public Image[] m_StateImage = new Image[14];
     public Sprite[] m_StateImageData = new Sprite[25];
@@ -101,25 +105,32 @@ public class UIManager : MonoBehaviour {
     float m_ExperienceMaxValue = 41.8f;
     float m_ExperiencePourcent=0.838f;
 
-    float m_LifeZeroValue = 430.4f;
-    float m_LifeMaxValue = 890.8f;
-    float m_LifePourcent = 4.604f;
+    float m_BarZeroValue = 453.0658f;
+    float m_BarMaxValue = 890.8f;
+    float m_BarPourcent = 4.604f;
 
-    float m_TresorZeroValue = 430.4f;
-    float m_TresorMaxValue = 890.8f;
-    float m_TresorPourcent = 4.604f;
+    public GameObject m_DazzledMask;
+
+    #endregion
 
     void Start()
     {
         m_CaptainRespawnTimer.enabled = false;
 
-        foreach(Sprite sprite in m_StateImageData)
+        m_BarMaxValue=m_LifeBarFull.transform.position.x;
+        //m_BarZeroValue = m_BarMaxValue / 2;
+
+        m_BarPourcent = (Mathf.Abs(m_BarMaxValue - m_BarZeroValue) )/ 100;
+
+
+        foreach (Sprite sprite in m_StateImageData)
         {
             StateLibrary.Add(sprite.name, sprite);
             
         }
         Initialization();
     }
+
 
     public void Initialization()
     {
@@ -128,7 +139,8 @@ public class UIManager : MonoBehaviour {
         
     }
 
-    public void UIClock()
+
+    public void ActualizeUIClock()
     {
         if (Game.instance.m_TimeOfPlay.minutes < 10)
         {
@@ -157,7 +169,7 @@ public class UIManager : MonoBehaviour {
 
     }
 
-    public void UIStatGeneral()
+    public void ActualizeUIStatGeneral()
     {
         m_PurpleShipwreck.text = Game.instance.m_DestroyCounterGamePurple.ToString();
         m_BlueShipwreck.text = Game.instance.m_DestroyCounterGameBlue.ToString();
@@ -169,7 +181,8 @@ public class UIManager : MonoBehaviour {
 
     }
 
-    public void UIExperienceAndLeveling()
+
+    public void ActualizeUIExperienceAndLeveling()
     {   
         if(m_Ship.m_ShipLevel<20)
         {
@@ -189,13 +202,14 @@ public class UIManager : MonoBehaviour {
         }
         else
         {
-            UIExperienceAndLevelingEnd();
+            ActualizeUIExperienceAndLevelingEnd();
         }
 
        
 
     }
-    public void UIExperienceAndLevelingEnd()
+
+    public void ActualizeUIExperienceAndLevelingEnd()
     {
         m_PlayerLevelText.text = m_Ship.m_ShipLevel.ToString();
         m_ExperienceText.text = "";
@@ -203,7 +217,7 @@ public class UIManager : MonoBehaviour {
 
     }
 
-    public void UILife()
+    public void ActualizeUILife()
     {
         m_LifeText.text = m_Ship.m_CHealthPoint.ToString() + " / " + m_Ship.m_CHealthPointBase.ToString();
 
@@ -211,15 +225,15 @@ public class UIManager : MonoBehaviour {
         if (m_Ship.m_CHealthPoint>0)
         {
             barLevel = (m_Ship.m_CHealthPoint * 100) / m_Ship.m_CHealthPointBase;
-            m_LifeBarFull.transform.position = new Vector3((barLevel*m_LifePourcent)+m_LifeZeroValue, m_LifeBarFull.transform.position.y, m_LifeBarFull.transform.position.z);
+            m_LifeBarFull.transform.position = new Vector3((barLevel* m_BarPourcent) + m_BarZeroValue, m_LifeBarFull.transform.position.y, m_LifeBarFull.transform.position.z);
         }
         else
         {
-            m_LifeBarFull.transform.position = new Vector3(m_LifeZeroValue, m_LifeBarFull.transform.position.y, m_LifeBarFull.transform.position.z);
+            m_LifeBarFull.transform.position = new Vector3(m_BarZeroValue, m_LifeBarFull.transform.position.y, m_LifeBarFull.transform.position.z);
         }
 
     }
-    public void UITresor()
+    public void ActualizeUITresor()
     {
         m_TresorText.text = m_Ship.m_CCapacity.ToString() + " / " + m_Ship.m_CCapacityBase.ToString();
 
@@ -228,16 +242,16 @@ public class UIManager : MonoBehaviour {
         if (m_Ship.m_CCapacity > 0)
         {
             barLevel = (m_Ship.m_CCapacity * 100) / m_Ship.m_CCapacityBase;
-            m_TresorBarFull.transform.position = new Vector3((barLevel * m_TresorPourcent) + m_TresorZeroValue, m_TresorBarFull.transform.position.y, m_TresorBarFull.transform.position.z);
+            m_TresorBarFull.transform.position = new Vector3((barLevel * m_BarPourcent) + m_BarZeroValue, m_TresorBarFull.transform.position.y, m_TresorBarFull.transform.position.z);
         }
         else
         {
-            m_TresorBarFull.transform.position = new Vector3(m_TresorZeroValue, m_TresorBarFull.transform.position.y, m_TresorBarFull.transform.position.z);
+            m_TresorBarFull.transform.position = new Vector3(m_BarZeroValue, m_TresorBarFull.transform.position.y, m_TresorBarFull.transform.position.z);
         }
         
     }
 
-    public void UIRespawnTimer()
+    public void ActualizeUIRespawnTimer()
     {
         if(m_CaptainRespawnTimer.enabled == false)
         {
@@ -274,23 +288,43 @@ public class UIManager : MonoBehaviour {
 
     }
 
-    public void UIState()
+    public void ActualizeUIState()
     {
 
-
-
         //for all the object in the shipstate list
-        for(int i=0; i<m_Ship.m_ShipStateAndDamageBehavior.m_ListState.Count;i++)
+        for (int i = 0; i < m_StateImage.Length; i++)
         {
-            if (i<14)
+            m_StateImage[i].sprite = m_Transparent;
+        }
+
+        for (int i=0; i<m_Ship.m_ShipStateAndDamageBehavior.m_ListState.Count;i++)
+        {
+            if (i < 14)
             {
-                m_StateImage[i].sprite = m_Transparent;
-                m_StateImage[i].sprite = StateLibrary[m_Ship.m_ShipStateAndDamageBehavior.m_ListState[i].name];
+                m_StateImage[i].sprite = StateLibrary[m_Ship.m_ShipStateAndDamageBehavior.m_ListState[i].GetComponent<State>().m_State.ToString()];
             }
+        }
+
+    }
+
+    public void ActualizeDazzled(bool IsDazzled)
+    {
+        if(IsDazzled==true)
+        {
+            m_DazzledMask.SetActive(true);
+        }
+        else
+        {
+            m_DazzledMask.SetActive(false);
         }
     }
 
+    public void ShowExperience(bool show)
+    {
+       m_ExperienceText.enabled = show;
+       m_ExperienceMax.enabled = show;
+        m_ExperienceSlash.enabled = show;
 
-
+    }
 }
 

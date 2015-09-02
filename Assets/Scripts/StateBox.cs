@@ -87,12 +87,22 @@ public class StateBox : MonoBehaviour {
     public GameObject go_State;
     State sb_State;
 
+    ShipStateAndDamageBehavior.EState m_State;
+    int m_Value;
+    float m_Time;
+    /// <summary>
+    /// Starts this instance.
+    /// </summary>
     void Start()
     {
         sb_State = go_State.GetComponent<State>();
     }
 
 
+    /// <summary>
+    /// Called when [trigger enter].
+    /// </summary>
+    /// <param name="other">The other.</param>
     void OnTriggerEnter(Collider other)
     {
         if(other.tag=="Player")
@@ -126,148 +136,148 @@ public class StateBox : MonoBehaviour {
                     switch (i)
                     {
                         case 0:                                                              
-                            sb_State.m_State = ShipStateAndDamageBehavior.EState.BOOSTED;                
-                            sb_State.m_Value = Value0;                        
-                            sb_State.m_Time = Time0;                          
+                            m_State = ShipStateAndDamageBehavior.EState.BOOSTED;                
+                            m_Value = Value0;                        
+                            m_Time = Time0;                          
                             break;                                           
                                                                              
                         case 1 :                                             
-                            sb_State.m_State = ShipStateAndDamageBehavior.EState.SLOWED;                 
-                            sb_State.m_Value = Value1;
-                            sb_State.m_Time = Time1;                          
+                            m_State = ShipStateAndDamageBehavior.EState.SLOWED;                 
+                            m_Value = Value1;
+                            m_Time = Time1;                          
                             break;                                           
                                                                              
                         case 2 :                                             
-                            sb_State.m_State = ShipStateAndDamageBehavior.EState.UNSINKABLE;             
-                            sb_State.m_Value = Value2;                        
-                            sb_State.m_Time = Time2;                          
+                            m_State = ShipStateAndDamageBehavior.EState.UNSINKABLE;             
+                            m_Value = Value2;                        
+                            m_Time = Time2;                          
                             break;                                           
                                                                              
                         case 3 :                                             
-                            sb_State.m_State = ShipStateAndDamageBehavior.EState.CONSOLIDATED;           
-                            sb_State.m_Value = Value3;                        
-                            sb_State.m_Time = Time3;                          
+                            m_State = ShipStateAndDamageBehavior.EState.CONSOLIDATED;           
+                            m_Value = Value3;                        
+                            m_Time = Time3;                          
                             break;                                           
                                                                              
                         case 4 :
-                            sb_State.m_State = ShipStateAndDamageBehavior.EState.SHIELD;
-                            sb_State.m_Value = Value4;
-                            sb_State.m_Time = Time4;
+                            m_State = ShipStateAndDamageBehavior.EState.SHIELD;
+                            m_Value = Value4;
+                            m_Time = Time4;
                             break;
 
                         case 5 :
-                            sb_State.m_State = ShipStateAndDamageBehavior.EState.WEAKENED;
-                            sb_State.m_Value = Value5;
-                            sb_State.m_Time = Time5;
+                            m_State = ShipStateAndDamageBehavior.EState.WEAKENED;
+                            m_Value = Value5;
+                            m_Time = Time5;
                             break;
 
                         case 6 :
-                            sb_State.m_State = ShipStateAndDamageBehavior.EState.ORGANIZED;
-                            sb_State.m_Value = Value6;
-                            sb_State.m_Time = Time6;
+                            m_State = ShipStateAndDamageBehavior.EState.ORGANIZED;
+                            m_Value = Value6;
+                            m_Time = Time6;
                             break;
 
                         case 7 :
-                            sb_State.m_State = ShipStateAndDamageBehavior.EState.CLUTTERED;
-                            sb_State.m_Value = Value7;
-                            sb_State.m_Time = Time7;
+                            m_State = ShipStateAndDamageBehavior.EState.CLUTTERED;
+                            m_Value = Value7;
+                            m_Time = Time7;
                             break;
 
                         case 8 :
-                            sb_State.m_State = ShipStateAndDamageBehavior.EState.CLAIRVOYANT;
-                            sb_State.m_Value = Value8;
-                            sb_State.m_Time = Time8;
+                            m_State = ShipStateAndDamageBehavior.EState.CLAIRVOYANT;
+                            m_Value = Value8;
+                            m_Time = Time8;
                             break;
 
                         case 9 :
-                            sb_State.m_State = ShipStateAndDamageBehavior.EState.DAZZLED;
-                            sb_State.m_Value = Value9;
-                            sb_State.m_Time = Time9;
+                            m_State = ShipStateAndDamageBehavior.EState.DAZZLED;
+                            m_Value = Value9;
+                            m_Time = Time9;
                             break;
 
                         case 10:
-                            sb_State.m_State = ShipStateAndDamageBehavior.EState.INSENTIENT;
-                            sb_State.m_Value = Value10;
-                            sb_State.m_Time = Time10;
+                            m_State = ShipStateAndDamageBehavior.EState.INSENTIENT;
+                            m_Value = Value10;
+                            m_Time = Time10;
                             break;
 
                         case 11:
-                            sb_State.m_State = ShipStateAndDamageBehavior.EState.REFURBISHMENT;
-                            sb_State.m_Value = Value11;
-                            sb_State.m_Time = Time11;
+                            m_State = ShipStateAndDamageBehavior.EState.REFURBISHMENT;
+                            m_Value = Value11;
+                            m_Time = Time11;
                             break;
 
                         case 12:
-                            sb_State.m_State = ShipStateAndDamageBehavior.EState.STRIKE;
-                            sb_State.m_Value = Value12;
-                            sb_State.m_Time = Time12;
+                            m_State = ShipStateAndDamageBehavior.EState.STRIKE;
+                            m_Value = Value12;
+                            m_Time = Time12;
                             break;
 
                         case 13:
-                            sb_State.m_State = ShipStateAndDamageBehavior.EState.ZEAL;
-                            sb_State.m_Value = Value13;
-                            sb_State.m_Time = Time13;
+                            m_State = ShipStateAndDamageBehavior.EState.ZEAL;
+                            m_Value = Value13;
+                            m_Time = Time13;
                             break;
 
                         case 14:
-                            sb_State.m_State = ShipStateAndDamageBehavior.EState.WARHUNGRY;
-                            sb_State.m_Value = Value14;
-                            sb_State.m_Time = Time14;
+                            m_State = ShipStateAndDamageBehavior.EState.WARHUNGRY;
+                            m_Value = Value14;
+                            m_Time = Time14;
                             break;
 
                         case 15:
-                            sb_State.m_State = ShipStateAndDamageBehavior.EState.PACIFIST;
-                            sb_State.m_Value = Value15;
-                            sb_State.m_Time = Time15;
+                            m_State = ShipStateAndDamageBehavior.EState.PACIFIST;
+                            m_Value = Value15;
+                            m_Time = Time15;
                             break;
 
                         case 16:
-                            sb_State.m_State = ShipStateAndDamageBehavior.EState.CEASEFIRE;
-                            sb_State.m_Value = Value16;
-                            sb_State.m_Time = Time16;
+                            m_State = ShipStateAndDamageBehavior.EState.CEASEFIRE;
+                            m_Value = Value16;
+                            m_Time = Time16;
                             break;
 
                         case 17:
-                            sb_State.m_State = ShipStateAndDamageBehavior.EState.ONFIRE;
-                            sb_State.m_Value = Value17;
-                            sb_State.m_Time = Time17;
+                            m_State = ShipStateAndDamageBehavior.EState.ONFIRE;
+                            m_Value = Value17;
+                            m_Time = Time17;
                             break;
 
                         case 18:
-                            sb_State.m_State = ShipStateAndDamageBehavior.EState.HULLBREACH;
-                            sb_State.m_Value = Value18;
-                            sb_State.m_Time = Time18;
+                            m_State = ShipStateAndDamageBehavior.EState.HULLBREACH;
+                            m_Value = Value18;
+                            m_Time = Time18;
                             break;
 
                         case 19:
-                            sb_State.m_State = ShipStateAndDamageBehavior.EState.LOCKED;
-                            sb_State.m_Value = Value19;
-                            sb_State.m_Time = Time19;
+                            m_State = ShipStateAndDamageBehavior.EState.LOCKED;
+                            m_Value = Value19;
+                            m_Time = Time19;
                             break;
 
                         case 20:
-                            sb_State.m_State = ShipStateAndDamageBehavior.EState.DAMN;
-                            sb_State.m_Value = Value20;
-                            sb_State.m_Time = Time20;
+                            m_State = ShipStateAndDamageBehavior.EState.DAMN;
+                            m_Value = Value20;
+                            m_Time = Time20;
                             break;
 
                         case 21:
-                            sb_State.m_State = ShipStateAndDamageBehavior.EState.REPAIR;
-                            sb_State.m_Value = Value21;
-                            sb_State.m_Time = Time21;
+                            m_State = ShipStateAndDamageBehavior.EState.REPAIR;
+                            m_Value = Value21;
+                            m_Time = Time21;
                             break;
 
                         case 22:
-                            sb_State.m_State = ShipStateAndDamageBehavior.EState.TERMITE;
-                            sb_State.m_Value = Value22;
-                            sb_State.m_Time = Time22;
+                            m_State = ShipStateAndDamageBehavior.EState.TERMITE;
+                            m_Value = Value22;
+                            m_Time = Time22;
                             break;
                     }
 
                     #endregion
 
 
-                    m_Ship.m_ShipStateAndDamageBehavior.AddState(go_State);
+                    m_Ship.m_ShipStateAndDamageBehavior.AddState(m_State,m_Value,m_Time);
                 }
 
             }
@@ -279,6 +289,9 @@ public class StateBox : MonoBehaviour {
         }
     }
 
+    /// <summary>
+    /// Updates this instance.
+    /// </summary>
     void Update()
     {
         ArrayOfBool[0]=  BOOSTED;

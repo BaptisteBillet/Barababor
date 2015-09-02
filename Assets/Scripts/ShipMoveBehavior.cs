@@ -35,7 +35,7 @@ public class ShipMoveBehavior : MonoBehaviour {
 
     //References
     Ship m_Ship;
-    ShipCameraBehavior m_PlayerCameraBehavior;
+    ShipCameraBehavior m_ShipCameraBehavior;
 
     // Use this for initialization
     void Start ()
@@ -46,7 +46,7 @@ public class ShipMoveBehavior : MonoBehaviour {
 
         //References
         m_Ship = GetComponent<Ship>();
-        m_PlayerCameraBehavior = GetComponent<ShipCameraBehavior>();
+        m_ShipCameraBehavior = GetComponent<ShipCameraBehavior>();
 
         //Members
         m_IsUsingGamePad = false;
@@ -245,7 +245,7 @@ public class ShipMoveBehavior : MonoBehaviour {
                     m_IsRotatingRight = false;
 
                     //Camera to the left
-                    m_PlayerCameraBehavior.MoveCameraToLeft();
+                    m_ShipCameraBehavior.MoveCamera("left");
 
                 }
 
@@ -256,7 +256,7 @@ public class ShipMoveBehavior : MonoBehaviour {
                     m_IsRotatingRight = true;
 
                     //Camera to the right
-                    m_PlayerCameraBehavior.MoveCameraToRight();
+                    m_ShipCameraBehavior.MoveCamera("right");
                 }
             }
             else
@@ -268,7 +268,7 @@ public class ShipMoveBehavior : MonoBehaviour {
                     m_IsRotatingRight = false;
 
                     //Camera to the left
-                    m_PlayerCameraBehavior.MoveCameraToLeft();
+                    m_ShipCameraBehavior.MoveCamera("left");
 
                 }
 
@@ -279,7 +279,7 @@ public class ShipMoveBehavior : MonoBehaviour {
                     m_IsRotatingRight = true;
 
                     //Camera to the right
-                    m_PlayerCameraBehavior.MoveCameraToRight();
+                    m_ShipCameraBehavior.MoveCamera("right");
                 }
             }
         }
@@ -289,7 +289,7 @@ public class ShipMoveBehavior : MonoBehaviour {
             m_IsRotatingRight = false;
 
             //Camera to the idle
-            m_PlayerCameraBehavior.MoveCameraToIdle();
+            m_ShipCameraBehavior.MoveCamera("idle");
         }
 
 

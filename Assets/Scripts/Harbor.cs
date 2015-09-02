@@ -12,26 +12,25 @@ public class Harbor : MonoBehaviour {
     public const int m_ValueOfHeal=5;
     public const float m_TimeOfHeal = 0.20f;
 
-	// Use this for initialization
-	void Start () {
-	
-	}
-	
-    IEnumerator Heal()
-    {
-        while(true)//is in contact
+    Renderer m_ParentMaterial;
+    public Material m_Blue;
+    public Material m_Purple;
+
+    public int m_TresorsNumbers;
+
+
+    // Use this for initialization
+    void Start () {
+
+        //Graphismes
+        m_ParentMaterial = transform.parent.GetComponent<Renderer>();
+        if(m_IsHarborBlue)
         {
-            State HarborHeal = new State();
-            HarborHeal.m_State = ShipStateAndDamageBehavior.EState.REPAIR;
-            //HarborHeal.m_Ship = this;
-            HarborHeal.m_Time = m_TimeOfHeal;
-            HarborHeal.m_Value = m_ValueOfHeal;
-            //AddState()
-
-            yield return new WaitForSeconds(m_TimeOfHeal);
+            m_ParentMaterial.material = m_Blue;
         }
-
-    }
-
-
+        else
+        {
+            m_ParentMaterial.material = m_Purple;
+        }
+	}
 }
