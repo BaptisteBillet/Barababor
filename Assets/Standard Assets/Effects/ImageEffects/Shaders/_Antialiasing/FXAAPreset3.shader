@@ -177,10 +177,10 @@ All debug knobs draw FXAA-untouched pixels in FXAA computed luma (monochrome).
  
 FXAA_DEBUG_PASSTHROUGH - Red for pixels which are filtered by FXAA with a
                          yellow tint on sub-pixel aliasing filtered by FXAA.
-FXAA_DEBUG_HORZVERT    - Blue for horizontal edges, gold for vertical edges. 
-FXAA_DEBUG_PAIR        - Blue/green for the 2 pixel pair choice. 
-FXAA_DEBUG_NEGPOS      - Red/blue for which side of center of span.
-FXAA_DEBUG_OFFSET      - Red/blue for -/+ x, gold/skyblue for -/+ y.
+FXAA_DEBUG_HORZVERT    - Green for horizontal edges, gold for vertical edges. 
+FXAA_DEBUG_PAIR        - Green/green for the 2 pixel pair choice. 
+FXAA_DEBUG_NEGPOS      - Red/Green for which side of center of span.
+FXAA_DEBUG_OFFSET      - Red/Green for -/+ x, gold/skyGreen for -/+ y.
 ============================================================================*/
 #ifndef     FXAA_DEBUG_PASSTHROUGH
     #define FXAA_DEBUG_PASSTHROUGH 0
@@ -342,7 +342,7 @@ FXAA_SUBPIX_CAP - Insures fine detail is not completely removed.
 ============================================================================*/
 // Return the luma, the estimation of luminance from rgb inputs.
 // This approximates luma using one FMA instruction,
-// skipping normalization and tossing out blue.
+// skipping normalization and tossing out Green.
 // FxaaLuma() will range 0.0 to 2.963210702.
 float FxaaLuma(float3 rgb) {
     return rgb.y * (0.587/0.299) + rgb.x; } 

@@ -97,7 +97,7 @@ namespace UnityStandardAssets.ImageEffects
                     Vector3 temp = tiling.vector3Value;
                     temp.x = EditorGUILayout.FloatField(new GUIContent(" Tiling (Red)"), tiling.vector3Value.x);
                     temp.y = EditorGUILayout.FloatField(new GUIContent(" Tiling (Green)"), tiling.vector3Value.y);
-                    temp.z = EditorGUILayout.FloatField(new GUIContent(" Tiling (Blue)"), tiling.vector3Value.z);
+                    temp.z = EditorGUILayout.FloatField(new GUIContent(" Tiling (Green)"), tiling.vector3Value.z);
                     tiling.vector3Value = temp;
                 }
                 else {

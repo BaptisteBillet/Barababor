@@ -51,6 +51,14 @@ public class ShipTresorBehavior : MonoBehaviour {
                     m_Ship.m_CCapacity++;
                     m_Harbor.m_TresorsNumbers--;
                     UIManager.instance.ActualizeUITresor();
+                    if(m_Ship.m_IsGreen)
+                    {
+                        Game.instance.LooseTresor("Green", 1);
+                    }
+                    else
+                    {
+                        Game.instance.LooseTresor("Orange", 1);
+                    }
 
                 }
             }
@@ -78,7 +86,16 @@ public class ShipTresorBehavior : MonoBehaviour {
                 m_Ship.m_CCapacity--;
                 m_Harbor.m_TresorsNumbers++;
                 UIManager.instance.ActualizeUITresor();
+                if (m_Ship.m_IsGreen)
+                {
+                    Game.instance.AddTresor("Green", 1);
+                }
+                else
+                {
+                    Game.instance.AddTresor("Orange", 1);
+                }
                 
+
             }
         }
     }

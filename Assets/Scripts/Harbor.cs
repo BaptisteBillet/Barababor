@@ -5,7 +5,7 @@ using System.Collections.Generic;
 public class Harbor : MonoBehaviour {
 
     //Members
-    public bool m_IsHarborBlue;
+    public bool m_IsHarborGreen;
 
     public Vector3[] m_SpawnList = new Vector3[5];
 
@@ -13,8 +13,8 @@ public class Harbor : MonoBehaviour {
     public const float m_TimeOfHeal = 0.20f;
 
     Renderer m_ParentMaterial;
-    public Material m_Blue;
-    public Material m_Purple;
+    public Material m_Green;
+    public Material m_Orange;
 
     public int m_TresorsNumbers;
 
@@ -24,13 +24,13 @@ public class Harbor : MonoBehaviour {
 
         //Graphismes
         m_ParentMaterial = transform.parent.GetComponent<Renderer>();
-        if(m_IsHarborBlue)
+        if(m_IsHarborGreen)
         {
-            m_ParentMaterial.material = m_Blue;
+            m_ParentMaterial.material = m_Green;
         }
         else
         {
-            m_ParentMaterial.material = m_Purple;
+            m_ParentMaterial.material = m_Orange;
         }
 	}
 }

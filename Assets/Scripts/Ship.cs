@@ -96,7 +96,7 @@ public class Ship : MonoBehaviour {
     [Space(10)]
     [Header("Team")]
     public string m_Team;
-    public bool m_IsBlue;
+    public bool m_IsGreen;
     public int m_TeamNumber;
     public EArchetype m_Archetype;
 
@@ -200,6 +200,9 @@ public class Ship : MonoBehaviour {
 
         #endregion
 
+        //For UI
+        UIManager.instance.ActualizeTeam(m_IsGreen);
+
         //Caracteristiques Initialisation
         ForceRefurbisment();
         
@@ -233,7 +236,7 @@ public class Ship : MonoBehaviour {
     {
         if (other.tag == "Harbor")
         {
-            if (other.gameObject.GetComponent<Harbor>().m_IsHarborBlue == m_IsBlue)
+            if (other.gameObject.GetComponent<Harbor>().m_IsHarborGreen == m_IsGreen)
             {
                 m_NearFromHomeHarbor = true;
                 m_ShipStateAndDamageBehavior.AddState(ShipStateAndDamageBehavior.EState.HARBORREPAIR, 0, 0);
@@ -246,7 +249,7 @@ public class Ship : MonoBehaviour {
    {
         if (other.tag == "Harbor")
         {
-            if (other.gameObject.GetComponent<Harbor>().m_IsHarborBlue == m_IsBlue)
+            if (other.gameObject.GetComponent<Harbor>().m_IsHarborGreen == m_IsGreen)
             {
                 m_NearFromHomeHarbor = false;
             }

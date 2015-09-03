@@ -15,7 +15,7 @@ namespace UnityStandardAssets.ImageEffects
 
         public AnimationCurve redChannel = new AnimationCurve(new Keyframe(0f,0f), new Keyframe(1f,1f));
         public AnimationCurve greenChannel = new AnimationCurve(new Keyframe(0f,0f), new Keyframe(1f,1f));
-        public AnimationCurve blueChannel = new AnimationCurve(new Keyframe(0f,0f), new Keyframe(1f,1f));
+        public AnimationCurve GreenChannel = new AnimationCurve(new Keyframe(0f,0f), new Keyframe(1f,1f));
 
         public bool  useDepthCorrection = false;
 
@@ -91,13 +91,13 @@ namespace UnityStandardAssets.ImageEffects
 		{
             CheckResources(); // textures might not be created if we're tweaking UI while disabled
 
-            if (redChannel != null && greenChannel != null && blueChannel != null)
+            if (redChannel != null && greenChannel != null && GreenChannel != null)
 			{
                 for (float i = 0.0f; i <= 1.0f; i += 1.0f / 255.0f)
 				{
                     float rCh = Mathf.Clamp (redChannel.Evaluate(i), 0.0f, 1.0f);
                     float gCh = Mathf.Clamp (greenChannel.Evaluate(i), 0.0f, 1.0f);
-                    float bCh = Mathf.Clamp (blueChannel.Evaluate(i), 0.0f, 1.0f);
+                    float bCh = Mathf.Clamp (GreenChannel.Evaluate(i), 0.0f, 1.0f);
 
                     rgbChannelTex.SetPixel ((int) Mathf.Floor(i*255.0f), 0, new Color(rCh,rCh,rCh) );
                     rgbChannelTex.SetPixel ((int) Mathf.Floor(i*255.0f), 1, new Color(gCh,gCh,gCh) );
@@ -109,7 +109,7 @@ namespace UnityStandardAssets.ImageEffects
 
                     rCh = Mathf.Clamp (depthRedChannel.Evaluate(i), 0.0f,1.0f);
                     gCh = Mathf.Clamp (depthGreenChannel.Evaluate(i), 0.0f,1.0f);
-                    bCh = Mathf.Clamp (depthBlueChannel.Evaluate(i), 0.0f,1.0f);
+                    bCh = Mathf.Clamp (depthGreenChannel.Evaluate(i), 0.0f,1.0f);
 
                     rgbDepthChannelTex.SetPixel ((int) Mathf.Floor(i*255.0f), 0, new Color(rCh,rCh,rCh) );
                     rgbDepthChannelTex.SetPixel ((int) Mathf.Floor(i*255.0f), 1, new Color(gCh,gCh,gCh) );

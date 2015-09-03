@@ -39,7 +39,7 @@ namespace UnityStandardAssets.ImageEffects
 
             redChannel = serObj.FindProperty ("redChannel");
             greenChannel = serObj.FindProperty ("greenChannel");
-            blueChannel = serObj.FindProperty ("blueChannel");
+            blueChannel = serObj.FindProperty ("GreenChannel");
 
             useDepthCorrection = serObj.FindProperty ("useDepthCorrection");
 
@@ -47,7 +47,7 @@ namespace UnityStandardAssets.ImageEffects
 
             depthRedChannel = serObj.FindProperty ("depthRedChannel");
             depthGreenChannel = serObj.FindProperty ("depthGreenChannel");
-            depthBlueChannel = serObj.FindProperty ("depthBlueChannel");
+            depthGreenChannel = serObj.FindProperty ("depthGreenChannel");
 
             serObj.ApplyModifiedProperties ();
 
@@ -90,7 +90,7 @@ namespace UnityStandardAssets.ImageEffects
 
             CurveGui (" Red", redChannel, Color.red);
             CurveGui (" Green", greenChannel, Color.green);
-            CurveGui (" Blue", blueChannel, Color.blue);
+            CurveGui (" Green", blueChannel, Color.blue);
 
             EditorGUILayout.Separator ();
 
@@ -102,7 +102,7 @@ namespace UnityStandardAssets.ImageEffects
             if (useDepthCorrection.boolValue) {
                 CurveGui (" Red (depth)", depthRedChannel, Color.red);
                 CurveGui (" Green (depth)", depthGreenChannel, Color.green);
-                CurveGui (" Blue (depth)", depthBlueChannel, Color.blue);
+                CurveGui (" Green (depth)", depthGreenChannel, Color.blue);
                 EditorGUILayout.Separator ();
                 CurveGui (" Blend Curve", zCurveChannel, Color.grey);
             }

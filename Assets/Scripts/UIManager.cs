@@ -91,54 +91,93 @@ public class UIManager : MonoBehaviour {
 
     //Flotte
     public Text m_Timer;
-    public Image m_PurpleBar;
-    public Image m_BlueBar;
+    public Image m_OrangeBar;
+    public Image m_GreenBar;
 
-    public Text m_PurpleColonies;
-    public Text m_PurpleShipwreck;
+    public Text m_OrangeColonies;
+    public Text m_OrangeShipwreck;
 
-    public Text m_BlueColonies;
-    public Text m_BlueShipwreck;
+    public Text m_GreenColonies;
+    public Text m_GreenShipwreck;
 
     //
     float m_ExperienceZeroValue = -42f;
     float m_ExperienceMaxValue = 41.8f;
     float m_ExperiencePourcent=0.838f;
 
-    float m_BarZeroValue = 453.0658f;
+    float m_BarZeroValue = 430.079f;
     float m_BarMaxValue = 890.8f;
     float m_BarPourcent = 4.604f;
 
+    float m_BarGreenZeroValue = 453.0658f;
+    float m_BarGreenMaxValue = 890.8f;
+    float m_BarGreenPourcent = 4.604f;
+
+    float m_BarOrangeZeroValue = 453.0658f;
+    float m_BarOrangeMaxValue = 890.8f;
+    float m_BarOrangePourcent = 4.604f;
+
     public GameObject m_DazzledMask;
 
+    public Color m_Green;
+
+    public Color m_Orange;
     #endregion
 
     void Start()
     {
         m_CaptainRespawnTimer.enabled = false;
 
-        m_BarMaxValue=m_LifeBarFull.transform.position.x;
-        //m_BarZeroValue = m_BarMaxValue / 2;
+        //Debug.Log(m_TresorBarFull.transform.position.x);
 
+        m_BarMaxValue = m_LifeBarFull.transform.position.x;
         m_BarPourcent = (Mathf.Abs(m_BarMaxValue - m_BarZeroValue) )/ 100;
 
+        #region BarGreenOrange        
+        m_GreenBar.transform.position = new Vector3(-178f, m_GreenBar.transform.position.y, m_GreenBar.transform.position.z);
+        
+        m_BarGreenZeroValue = -178f;
+        m_BarGreenMaxValue =833f;
+        m_BarGreenPourcent= (m_BarGreenMaxValue - m_BarGreenZeroValue) / 100;
+
+        
+        m_OrangeBar.transform.position= new Vector3(1844, m_OrangeBar.transform.position.y, m_OrangeBar.transform.position.z);
+
+        m_BarOrangeZeroValue = m_OrangeBar.transform.position.x;
+        m_BarOrangeMaxValue = 833f;
+        m_BarOrangePourcent =-( (m_BarOrangeZeroValue - m_BarOrangeMaxValue) / 100);
+        #endregion
 
         foreach (Sprite sprite in m_StateImageData)
         {
             StateLibrary.Add(sprite.name, sprite);
             
         }
+
+
+
         Initialization();
     }
 
 
     public void Initialization()
     {
-        m_BlueColonies.text = Game.instance.m_BlueColonies.ToString();
-        m_PurpleColonies.text = Game.instance.m_PurpleColonies.ToString();
+        m_GreenColonies.text = Game.instance.m_GreenColonies.ToString();
+        m_OrangeColonies.text = Game.instance.m_OrangeColonies.ToString();
         
     }
 
+    public void ActualizeTeam(bool IsGreen)
+    {
+        if(IsGreen)
+        {
+            m_ExperienceBarFull.color = m_Green;
+        }
+        else
+        {
+            m_ExperienceBarFull.color = m_Orange;
+        }
+    }
 
     public void ActualizeUIClock()
     {
@@ -171,11 +210,11 @@ public class UIManager : MonoBehaviour {
 
     public void ActualizeUIStatGeneral()
     {
-        m_PurpleShipwreck.text = Game.instance.m_DestroyCounterGamePurple.ToString();
-        m_BlueShipwreck.text = Game.instance.m_DestroyCounterGameBlue.ToString();
+        m_OrangeShipwreck.text = Game.instance.m_DestroyCounterGameOrange.ToString();
+        m_GreenShipwreck.text = Game.instance.m_DestroyCounterGameGreen.ToString();
 
-        m_PurpleColonies.text = Game.instance.m_PurpleColonies.ToString();
-        m_BlueColonies.text = Game.instance.m_BlueColonies.ToString();
+        m_OrangeColonies.text = Game.instance.m_OrangeColonies.ToString();
+        m_GreenColonies.text = Game.instance.m_GreenColonies.ToString();
 
         m_Stats.text = m_Ship.m_DestroyCounter.ToString()+"/"+ m_Ship.m_AssistCounter.ToString()+"/"+ m_Ship.m_DeathCounter.ToString();
 
@@ -326,5 +365,39 @@ public class UIManager : MonoBehaviour {
         m_ExperienceSlash.enabled = show;
 
     }
+
+    public void ActualiseGlobalTresors()
+    {
+
+        float barLevel = 0;
+        if (Game.instance.m_GreenTresors>0)
+        {
+            barLevel = (Game.instance.m_GreenTresors * 100) / Game.instance.m_TresorsTotal;
+            Debug.Log(barLevel+" "+ m_BarGreenPourcent+" "+ m_BarGreenZeroValue);
+            m_GreenBar.transform.position = new Vector3((barLevel* m_BarGreenPourcent)+m_BarGreenZeroValue, m_GreenBar.transform.position.y, m_GreenBar.transform.position.z);
+        }
+        else
+        {
+            m_GreenBar.transform.position = new Vector3(m_BarGreenZeroValue, m_GreenBar.transform.position.y, m_GreenBar.transform.position.z);
+        }
+
+        barLevel = 0;
+        if (Game.instance.m_OrangeTresors > 0)
+        {
+            barLevel = (Game.instance.m_OrangeTresors * 100) / Game.instance.m_TresorsTotal;
+            m_OrangeBar.transform.position = new Vector3((barLevel * m_BarOrangePourcent) + m_BarOrangeZeroValue, m_OrangeBar.transform.position.y, m_OrangeBar.transform.position.z);
+        }
+        else
+        {
+            m_OrangeBar.transform.position = new Vector3(m_BarOrangeZeroValue, m_OrangeBar.transform.position.y, m_OrangeBar.transform.position.z);
+        }
+
+    }
+
+    void Update()
+    {
+        ActualiseGlobalTresors();
+    }
+
 }
 

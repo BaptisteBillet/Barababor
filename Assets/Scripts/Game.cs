@@ -4,21 +4,28 @@ using System.Collections;
 public class Game : MonoBehaviour {
 
 
-    public GameObject[] m_TeamListBlue = new GameObject[5];
+    public GameObject[] m_TeamListGreen = new GameObject[5];
 
-    public GameObject[] m_TeamListPurple = new GameObject[5];
+    public GameObject[] m_TeamListOrange = new GameObject[5];
 
     [Space(10)]
-    public int m_DeathCounterGameBlue;
-    public int m_DestroyCounterGameBlue;
-    public int m_AssistCounterGameBlue;
+    public int m_DeathCounterGameGreen;
+    public int m_DestroyCounterGameGreen;
+    public int m_AssistCounterGameGreen;
     [Space(10)]
-    public int m_DeathCounterGamePurple;
-    public int m_DestroyCounterGamePurple;
-    public int m_AssistCounterGamePurple;
+    public int m_DeathCounterGameOrange;
+    public int m_DestroyCounterGameOrange;
+    public int m_AssistCounterGameOrange;
     [Space(10)]
-    public int m_BlueColonies;
-    public int m_PurpleColonies;
+    public int m_GreenColonies;
+    public int m_OrangeColonies;
+
+    [Space(10)]
+    public int m_GreenTresors;
+    public int m_OrangeTresors;
+
+    [HideInInspector]
+    public int m_TresorsTotal=100;
 
     //References
     public UIManager m_UIManager;
@@ -43,16 +50,16 @@ public class Game : MonoBehaviour {
         m_TimeOfPlay = GetComponent<TimeOfPlay>();
 
 
-        m_DeathCounterGameBlue = 0;
-        m_DestroyCounterGameBlue = 0;
-        m_AssistCounterGameBlue = 0;
+        m_DeathCounterGameGreen = 0;
+        m_DestroyCounterGameGreen = 0;
+        m_AssistCounterGameGreen = 0;
 
-        m_DeathCounterGamePurple = 0;
-        m_DestroyCounterGamePurple = 0;
-        m_AssistCounterGamePurple = 0;
+        m_DeathCounterGameOrange = 0;
+        m_DestroyCounterGameOrange = 0;
+        m_AssistCounterGameOrange = 0;
 
-        m_BlueColonies=0;
-        m_PurpleColonies=0;
+        m_GreenColonies=0;
+        m_OrangeColonies=0;
 
 
 
@@ -60,32 +67,27 @@ public class Game : MonoBehaviour {
 }
     #endregion
 
-   
-
-
-
-    
-
     // Use this for initialization
     void Start ()
     {
         UIManager.instance.ActualizeUIStatGeneral();
+        UIManager.instance.ActualiseGlobalTresors();
     }
     
     public void AddStat(string camp, string stat)
     {
-        if(camp=="blue")
+        if(camp=="Green")
         {
             switch(stat)
             {
                 case "Destroy":
-                    m_DestroyCounterGameBlue++;
+                    m_DestroyCounterGameGreen++;
                     break;
                 case "Death":
-                    m_DeathCounterGameBlue++;
+                    m_DeathCounterGameGreen++;
                     break;
                 case "Assist":
-                    m_AssistCounterGameBlue++;
+                    m_AssistCounterGameGreen++;
                     break;
             }
         }
@@ -94,13 +96,13 @@ public class Game : MonoBehaviour {
             switch (stat)
             {
                 case "Destroy":
-                    m_DestroyCounterGamePurple++;
+                    m_DestroyCounterGameOrange++;
                     break;
                 case "Death":
-                    m_DeathCounterGamePurple++;
+                    m_DeathCounterGameOrange++;
                     break;
                 case "Assist":
-                    m_AssistCounterGamePurple++;
+                    m_AssistCounterGameOrange++;
                     break;
             }
         }
@@ -109,5 +111,31 @@ public class Game : MonoBehaviour {
 
     }
 
+    public void AddTresor(string camp, int quantity)
+    {
+        if(camp=="Green")
+        {
+            m_GreenTresors += quantity;
+        }
+        else
+        {
+            Debug.Log("add");
+            m_OrangeTresors += quantity;
+        }
+        UIManager.instance.ActualiseGlobalTresors();
+    }
 
+    public void LooseTresor(string camp, int quantity)
+    {
+        Debug.Log("loose");
+        if (camp == "Green")
+        {
+            m_GreenTresors -= quantity;
+        }
+        else
+        {
+            m_OrangeTresors -= quantity;
+        }
+        UIManager.instance.ActualiseGlobalTresors();
+    }
 }
