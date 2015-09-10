@@ -21,7 +21,7 @@ public class Ship : MonoBehaviour {
     [HideInInspector]
     public int FACTORHEALTHPOINT = 100;
     [HideInInspector]
-    public int FACTORSPEED = 200;
+    public int FACTORSPEED = 100;
     [HideInInspector]
     public float FACTORDAMAGE = 6;
     [HideInInspector]

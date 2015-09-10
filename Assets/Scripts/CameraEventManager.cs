@@ -28,17 +28,21 @@ using System.Collections;
 
 public enum EventManagerType
 {
-    FISHEYEBUMP
+    FISHEYEBUMP,
+    DASH,
+    FIELDSPEED
 }
 
 public class CameraEventManager : MonoBehaviour
 {
 
     public delegate void EventAction(EventManagerType emt);
+    public delegate void FOVSpeed(ShipMoveBehavior m_Ship);
     public static event EventAction onEvent;
+    public static event FOVSpeed ActualizeFOV;
 
     #region Singleton
-	static private CameraEventManager s_Instance;
+    static private CameraEventManager s_Instance;
 	static public CameraEventManager instance
     {
         get
@@ -59,6 +63,7 @@ public class CameraEventManager : MonoBehaviour
     void Start()
     {
 		CameraEventManager.onEvent += (EventManagerType emt)=> { };
+        CameraEventManager.ActualizeFOV += (ShipMoveBehavior m_Ship) => { };
     }
 
     public static void emit(EventManagerType emt)
@@ -69,7 +74,15 @@ public class CameraEventManager : MonoBehaviour
             onEvent(emt);
         }
     }
-    
+
+    public static void FOVActualize(ShipMoveBehavior m_Ship)
+    {
+
+        if (ActualizeFOV != null)
+        {
+            ActualizeFOV(m_Ship);
+        }
+    }
 
 
 }

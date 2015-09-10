@@ -5,8 +5,10 @@ public class LookAtMouse : MonoBehaviour
 {
     Vector3 last_mousePos= new Vector3();
     Vector3 mousePos = new Vector3();
-
+    Vector4 last_GamepadPos = new Vector3();
     public Ship m_Ship;
+
+    
 
     bool m_IsGamepadMode;
 
@@ -22,7 +24,6 @@ public class LookAtMouse : MonoBehaviour
     {
 
         mousePos = Input.mousePosition;
-
 
         if (last_mousePos != mousePos && (Input.GetAxis("R_XAxis_1") == 0) && (Input.GetAxis("R_YAxis_1") == 0))
         {
@@ -48,13 +49,23 @@ public class LookAtMouse : MonoBehaviour
         else if (((Input.GetAxis("R_XAxis_1") != 0) || (Input.GetAxis("R_YAxis_1") != 0)))
         {
             mousePos = new Vector3((Input.GetAxis("R_YAxis_1")), (Input.GetAxis("R_XAxis_1"))*-1, 0);
+            last_GamepadPos= new Vector3((Input.GetAxis("R_YAxis_1")), (Input.GetAxis("R_XAxis_1")) * -1, 0);
             mousePos.z = 0;
+            last_GamepadPos.z = 0;
 
             float angle = Mathf.Atan2(mousePos.y, mousePos.x) * Mathf.Rad2Deg;
-            transform.rotation = Quaternion.Euler(new Vector3(0, angle,0 ));
+            transform.rotation = Quaternion.Euler(new Vector3(0, angle+90,0 ));
             m_Ship.m_AngleAttack = angle;
             m_IsGamepadMode = true;
-           // last_mousePos = mousePos;
+
+            // last_mousePos = mousePos;
+        }
+        else if (m_IsGamepadMode == true && (Input.GetAxis("R_XAxis_1") == 0) && (Input.GetAxis("R_YAxis_1") == 0))
+        {
+            float angle = Mathf.Atan2(last_GamepadPos.y, last_GamepadPos.x) * Mathf.Rad2Deg;
+            transform.rotation = Quaternion.Euler(new Vector3(0, angle + 90, 0));
+            m_Ship.m_AngleAttack = angle;
+            m_IsGamepadMode = true;
         }
 
     }

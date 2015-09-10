@@ -4,7 +4,7 @@ using System.Collections;
 public class ShipMoveBehavior : MonoBehaviour {
 
     // If the ship is currently moving
-    bool m_IsMoving;
+    public bool m_IsMoving;
     // If the ship is currently Rotating to the left
     bool m_IsRotatingLeft;
     // If the ship is currently Rotating to the right
@@ -14,7 +14,8 @@ public class ShipMoveBehavior : MonoBehaviour {
 
     // Which Button the player is pushing
     bool m_Up;
-    bool m_Down;
+    [HideInInspector]
+    public bool m_Down;
     bool m_Left;
     bool m_Right;
     #endregion 
@@ -25,7 +26,8 @@ public class ShipMoveBehavior : MonoBehaviour {
     public float m_RotateSpeed;
     public float m_DegreMax;
 
-
+    //Dash
+    public bool m_IsDashing;
   
     //Components
     Rigidbody m_Rigidbody;
@@ -33,7 +35,8 @@ public class ShipMoveBehavior : MonoBehaviour {
 
 
     //References
-    Ship m_Ship;
+    [HideInInspector]
+    public Ship m_Ship;
     ShipCameraBehavior m_ShipCameraBehavior;
 
     // Use this for initialization
@@ -72,11 +75,18 @@ public class ShipMoveBehavior : MonoBehaviour {
             m_MoveMaxSpeed = m_Ship.m_CSpeed / 10;
             m_RotateSpeed = m_MoveMaxSpeed * 4;
 
+
             //InputDetection for etablish which button is pushed 
             InputDetection();
 
             //Define Direction for applying the speed or the transform and the camera mouvement
             DefineDirection();
+
+            if(m_IsDashing)
+            {
+                m_MoveSpeed = m_MoveMaxSpeed;
+                m_IsMoving = true;
+            }
 
             // Move the ship
             m_Rigidbody.velocity = transform.forward * m_MoveSpeed;
@@ -90,6 +100,11 @@ public class ShipMoveBehavior : MonoBehaviour {
             m_Rigidbody.velocity = Vector3.zero;
             m_MeshAnimator.enabled = false;
         }
+
+            CameraEventManager.FOVActualize(this);
+
+      
+
     }
 
 
@@ -305,7 +320,10 @@ public class ShipMoveBehavior : MonoBehaviour {
         m_MeshAnimator.SetBool("Right", m_IsRotatingRight);
     }
   
-
+    public void Dash(bool IsDashing)
+    {
+        m_IsDashing = IsDashing;
+    }
 
 }
 

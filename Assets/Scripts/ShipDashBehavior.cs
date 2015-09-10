@@ -13,6 +13,9 @@ public class ShipDashBehavior : MonoBehaviour {
 
     public bool m_IsDashReady;
 
+    int m_Desceleration=7;
+    float m_DelayDesceleration=0.001f;
+
 	// Use this for initialization
 	void Start ()
     {
@@ -30,13 +33,15 @@ public class ShipDashBehavior : MonoBehaviour {
         {
 
             //Keyboard
-            if (Input.GetButtonDown("Shift"))
+            if (Input.GetButtonDown("Shift") || Input.GetButtonDown("A"))
             {
                 LetsDash();
             }
-
+        }
             //GamePad
             #region Gamepad
+
+            /*
             if (Input.GetAxis("R_YAxis_1") < 0)
             {
                 //First Dash
@@ -62,6 +67,13 @@ public class ShipDashBehavior : MonoBehaviour {
                 }
 
             }
+            
+
+            if (Input.GetButtonDown("A"))
+            {
+                LetsDash();
+            }
+
 
         }
 
@@ -69,6 +81,7 @@ public class ShipDashBehavior : MonoBehaviour {
         {
             m_DashStick = false;
         }
+        */
     }
 
     IEnumerator CWaitForDash()
@@ -109,8 +122,29 @@ public class ShipDashBehavior : MonoBehaviour {
 
     IEnumerator DashEffect()
     {
+        float difference = m_Ship.m_CSpeed - 500;
 
-        yield return new WaitForSeconds(2);
+        m_Ship.m_CSpeed = 500;
+
+        m_Ship.m_ShipMoveBehavior.Dash(true);
+
+        yield return new WaitForSeconds(1);
+
+        StartCoroutine(DashDescelleration((int)(m_Ship.m_CSpeed + difference)));
+
+
+    }
+
+    IEnumerator DashDescelleration(int objective)
+    {
+        while(m_Ship.m_CSpeed> objective)
+        {
+            m_Ship.m_CSpeed -= m_Desceleration;
+
+            yield return new WaitForSeconds(m_DelayDesceleration);
+
+        }
+        m_Ship.m_ShipMoveBehavior.Dash(false);
 
     }
 }
