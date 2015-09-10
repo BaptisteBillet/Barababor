@@ -46,6 +46,43 @@ public class ColonieSystem : MonoBehaviour {
         }
     }
 
+    void OnTriggerStay(Collider other)
+    {
+        if (m_Colonie.m_IsNeutre == false)
+        {
+            if (other.tag == "Player")
+            {
+                Ship m_ship = other.gameObject.GetComponent<Ship>();
+                if (m_Colonie.m_IsGreen == m_ship.m_IsGreen)
+                {
+
+                    if (m_Colonie.m_ColonieFortification.m_IsInConstruction == false)
+                    {
+                        if (m_Colonie.m_ColonieLevel < 5)
+                        {
+                            if (m_ship.m_ShipMaterialBehavior.CanLooseMaterial())
+                            {
+                                m_Colonie.m_ColonieFortification.StartConstruction();
+                            }
+                        }
+
+
+                        else if (m_Colonie.m_ColonieLife < m_Colonie.m_ColonieMaxLife)
+                        {
+                            if (m_ship.m_ShipMaterialBehavior.CanLooseMaterial())
+                            {
+                                m_Colonie.m_ColonieLife = m_Colonie.m_ColonieMaxLife;
+                            }
+                        }
+                    }
+                }
+            }
+
+        }
+       
+    }
+
+
     void OnTriggerExit(Collider other)
     {
         if (other.tag == "Player")
@@ -78,20 +115,28 @@ public class ColonieSystem : MonoBehaviour {
     {
         if(m_GreenShipNear == 0 ^ m_OrangeShipNear == 0)
         {
-            //if the island is neutral
-            if(m_Colonie.m_Neutre && m_Colonie.m_ColonieLevel==0)
+            //if the island is neutral OR not neutral and no life
+            if(((m_Colonie.m_IsNeutre)|| (m_Colonie.m_IsNeutre == false)) && m_Colonie.m_ColonieLife == 0)
             {
+                if(m_GreenShipNear>0)
+                {
+                    m_Colonie.m_IsGreen = true;
+                    m_Colonie.m_IsOrange = false;
+                }
+                if(m_OrangeShipNear>0)
+                {
+                    m_Colonie.m_IsOrange = true;
+                    m_Colonie.m_IsGreen = false;
+                }
 
-            }
-
-            //if the island isn't neutral
-            if (m_Colonie.m_Neutre==false && m_Colonie.m_ColonieLevel == 0 && m_Colonie.m_ColonieLife==0)
-            {
-
+                m_Colonie.m_IsNeutre = false;
+                m_Colonie.m_ColonieMaxLife = m_Colonie.m_ColonieFortification.m_CabaneLife;
+                m_Colonie.m_ColonieLife = m_Colonie.m_ColonieMaxLife;
+                m_Colonie.m_ColonieFortification.ConstructionFortificationGraphismes();
+                m_Colonie.ActualizeUIColonisation();
             }
         }
     }
-
 
 }
 

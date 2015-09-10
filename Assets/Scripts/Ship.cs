@@ -21,7 +21,7 @@ public class Ship : MonoBehaviour {
     [HideInInspector]
     public int FACTORHEALTHPOINT = 100;
     [HideInInspector]
-    public int FACTORSPEED = 100;
+    public int FACTORSPEED = 200;
     [HideInInspector]
     public float FACTORDAMAGE = 6;
     [HideInInspector]
@@ -96,9 +96,12 @@ public class Ship : MonoBehaviour {
     [Space(10)]
     [Header("Team")]
     public string m_Team;
+    [Space(5)]
     public bool m_IsGreen;
+    [Space(5)]
     public int m_TeamNumber;
     public EArchetype m_Archetype;
+    public GameObject m_ShipCenter;
 
     // If the player can move his ship
     [Space(10)]
@@ -140,12 +143,35 @@ public class Ship : MonoBehaviour {
     public ShipLevelingBehavior m_ShipLevelingBehavior;
     [HideInInspector]
     public ShipTresorBehavior m_ShipTresorBehavior;
+    [HideInInspector]
+    public ShipMaterialBehavior m_ShipMaterialBehavior;
+    [HideInInspector]
+    public ShipEquipementBehavior m_ShipEquipementBehavior;
+    [HideInInspector]
+    public ShipDashBehavior m_ShipDashBehavior;
 
     //For others ship
     public int m_ExperienceWin;
 
     //For multiples script
     public bool m_NearFromHomeHarbor;
+    public bool m_NearFromColonie;
+    // If the player use the gamepad or the keyboard
+    public bool m_IsUsingGamePad;
+    //For the direction of the pointer
+    public float m_AngleAttack;
+
+    //For Material
+    [Header("Material")]
+    public int m_MaterialMaxNumber;
+    public int m_MaterialNumber;
+
+    //For Ui Camera
+    [Header("UICamera")]
+    public Camera UICamera;
+    public LayerMask LayerGreen;
+    public LayerMask LayerOrange;
+
 
 
     public void Awake()
@@ -158,6 +184,32 @@ public class Ship : MonoBehaviour {
         m_ShipKillBehavior = GetComponent<ShipKillBehavior>();
         m_ShipLevelingBehavior = GetComponent<ShipLevelingBehavior>();
         m_ShipTresorBehavior = GetComponent<ShipTresorBehavior>();
+        m_ShipMaterialBehavior = GetComponent<ShipMaterialBehavior>();
+        m_ShipEquipementBehavior = GetComponent<ShipEquipementBehavior>();
+        m_ShipDashBehavior = GetComponent<ShipDashBehavior>();
+
+        if (m_ShipMoveBehavior == null) { Debug.LogError("Miss m_ShipMoveBehavior") ;}
+        if (m_ShipCameraBehavior == null) { Debug.LogError("Miss m_ShipCameraBehavior"); }
+        if (m_ShipStateAndDamageBehavior == null) { Debug.LogError("Miss m_ShipStateAndDamageBehavior"); }
+        if (m_ShipDeathBehavior == null) { Debug.LogError("Miss m_ShipDeathBehavior"); }
+        if (m_ShipKillBehavior == null) { Debug.LogError("Miss m_ShipKillBehavior"); }
+        if (m_ShipLevelingBehavior == null) { Debug.LogError("Miss m_ShipLevelingBehavior"); }
+        if (m_ShipTresorBehavior == null) { Debug.LogError("Miss m_ShipTresorBehavior"); }
+        if (m_ShipMaterialBehavior == null) { Debug.LogError("Miss m_ShipMaterialBehavior"); }
+        if (m_ShipEquipementBehavior == null) { Debug.LogError("Miss m_ShipEquipementBehavior"); }
+        if (m_ShipDashBehavior == null) { Debug.LogError("Miss m_ShipDashBehavior"); }
+
+        //For UI
+        if (m_IsGreen)
+        {
+            UICamera.cullingMask = LayerGreen;
+        }
+        else
+        {
+            UICamera.cullingMask = LayerOrange;
+        }
+
+        //For System
         m_ShipLevel = 1;
     }
 
@@ -182,7 +234,8 @@ public class Ship : MonoBehaviour {
         m_DestroyCounter = 0;
         m_AssistCounter = 0;
         m_DeathCounter = 0;
-
+        m_MaterialMaxNumber = 2;
+        m_MaterialNumber = 0;
         //Add the carac of the elements into the elements variables
         foreach (Element element in m_ArrayOfElement)
         {
@@ -228,6 +281,7 @@ public class Ship : MonoBehaviour {
         m_CanAttack=true;
         m_Resistance=100;
         m_Shield=0;
+        m_MaterialNumber = 0;
         UIManager.instance.ActualizeUILife();
         UIManager.instance.ActualizeUITresor();
     }
@@ -236,11 +290,11 @@ public class Ship : MonoBehaviour {
     {
         if (other.tag == "Harbor")
         {
-            if (other.gameObject.GetComponent<Harbor>().m_IsHarborGreen == m_IsGreen)
+            if (other.gameObject.GetComponent<HarborTresorsBehavior>().m_Harbor.m_IsGreen == m_IsGreen)
             {
                 m_NearFromHomeHarbor = true;
                 m_ShipStateAndDamageBehavior.AddState(ShipStateAndDamageBehavior.EState.HARBORREPAIR, 0, 0);
-                m_ShipTresorBehavior.m_Harbor = other.gameObject.GetComponent<Harbor>();
+                m_ShipTresorBehavior.m_Harbor = other.gameObject.GetComponent<HarborTresorsBehavior>().m_Harbor;
             }
         }
 
@@ -249,7 +303,7 @@ public class Ship : MonoBehaviour {
    {
         if (other.tag == "Harbor")
         {
-            if (other.gameObject.GetComponent<Harbor>().m_IsHarborGreen == m_IsGreen)
+            if (other.gameObject.GetComponent<HarborTresorsBehavior>().m_Harbor.m_IsGreen == m_IsGreen)
             {
                 m_NearFromHomeHarbor = false;
             }

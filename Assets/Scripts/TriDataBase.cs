@@ -149,8 +149,8 @@ public class TriDataBase : MonoBehaviour
             m_Equipement.m_LevelUp = row._LevelUp;
             m_Equipement.m_Range = row._Range;
             m_Equipement.m_RangeUpgrade = row._RangeUpgrade;
-            m_Equipement.m_Cooldown = row._Cooldown;
-            m_Equipement.m_CooldownUpgrade = row._CooldownUpgrade;
+            //m_Equipement.m_Cooldown = row._Cooldown;
+            //m_Equipement.m_CooldownUpgrade = row._CooldownUpgrade;
             m_Equipement.m_ShootType = row._ShootType;
             m_Equipement.m_ShootTypeUpgrade = row._ShootTypeUpgrade;
             m_Equipement.m_Cost = row._Cost;

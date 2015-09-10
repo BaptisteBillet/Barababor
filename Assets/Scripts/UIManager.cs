@@ -100,6 +100,8 @@ public class UIManager : MonoBehaviour {
     public Text m_GreenColonies;
     public Text m_GreenShipwreck;
 
+    public Text m_MaterialNumber;
+
     //
     float m_ExperienceZeroValue = -42f;
     float m_ExperienceMaxValue = 41.8f;
@@ -164,7 +166,8 @@ public class UIManager : MonoBehaviour {
     {
         m_GreenColonies.text = Game.instance.m_GreenColonies.ToString();
         m_OrangeColonies.text = Game.instance.m_OrangeColonies.ToString();
-        
+        m_MaterialNumber.text = "0";
+
     }
 
     public void ActualizeTeam(bool IsGreen)
@@ -394,9 +397,13 @@ public class UIManager : MonoBehaviour {
 
     }
 
-    void Update()
+    public void ActualizeUIMaterial()
     {
-        ActualiseGlobalTresors();
+        m_MaterialNumber.text = m_Ship.m_MaterialNumber.ToString();
+        if (m_Ship.m_MaterialNumber==m_Ship.m_MaterialMaxNumber)
+        {
+            m_MaterialNumber.color = Color.red;
+        }
     }
 
 }

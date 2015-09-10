@@ -11,8 +11,7 @@ public class ShipMoveBehavior : MonoBehaviour {
     bool m_IsRotatingRight;
 
     #region Input
-    // If the player use the gamepad or the keyboard
-    bool m_IsUsingGamePad;
+
     // Which Button the player is pushing
     bool m_Up;
     bool m_Down;
@@ -49,7 +48,7 @@ public class ShipMoveBehavior : MonoBehaviour {
         m_ShipCameraBehavior = GetComponent<ShipCameraBehavior>();
 
         //Members
-        m_IsUsingGamePad = false;
+        m_Ship.m_IsUsingGamePad = false;
 
         m_IsMoving=false;
         m_IsRotatingLeft=false;
@@ -100,9 +99,9 @@ public class ShipMoveBehavior : MonoBehaviour {
         if (Input.GetAxis("L_XAxis_1") < 0)
         {
             m_Left=true;
-            if(m_IsUsingGamePad==false)
+            if(m_Ship.m_IsUsingGamePad ==false)
             {
-                m_IsUsingGamePad = true;
+                m_Ship.m_IsUsingGamePad = true;
             }
         }
         else
@@ -113,9 +112,9 @@ public class ShipMoveBehavior : MonoBehaviour {
         if (Input.GetAxis("L_XAxis_1") > 0)
         {
             m_Right = true;
-            if (m_IsUsingGamePad == false)
+            if (m_Ship.m_IsUsingGamePad == false)
             {
-                m_IsUsingGamePad = true;
+                m_Ship.m_IsUsingGamePad = true;
             }
         }
         else
@@ -125,9 +124,9 @@ public class ShipMoveBehavior : MonoBehaviour {
         if (Input.GetAxis("L_YAxis_1") < 0)
         {
             m_Up = true;
-            if (m_IsUsingGamePad == false)
+            if (m_Ship.m_IsUsingGamePad == false)
             {
-                m_IsUsingGamePad = true;
+                m_Ship.m_IsUsingGamePad = true;
             }
         }
         else
@@ -137,9 +136,9 @@ public class ShipMoveBehavior : MonoBehaviour {
         if (Input.GetAxis("L_YAxis_1") > 0)
         {
             m_Down = true;
-            if (m_IsUsingGamePad == false)
+            if (m_Ship.m_IsUsingGamePad == false)
             {
-                m_IsUsingGamePad = true;
+                m_Ship.m_IsUsingGamePad = true;
             }
         }
         else
@@ -152,9 +151,9 @@ public class ShipMoveBehavior : MonoBehaviour {
         if (Input.GetKey("up") || Input.GetKey(KeyCode.Z))
         {
             m_Up = true;
-            if (m_IsUsingGamePad == true)
+            if (m_Ship.m_IsUsingGamePad == true)
             {
-                m_IsUsingGamePad = false;
+                m_Ship.m_IsUsingGamePad = false;
             }
         }
         if(Input.GetKeyUp("up") && Input.GetKeyUp(KeyCode.Z))
@@ -165,9 +164,9 @@ public class ShipMoveBehavior : MonoBehaviour {
         if (Input.GetKey("down") || Input.GetKey(KeyCode.S))
         {
             m_Down = true;
-            if (m_IsUsingGamePad == true)
+            if (m_Ship.m_IsUsingGamePad == true)
             {
-                m_IsUsingGamePad = false;
+                m_Ship.m_IsUsingGamePad = false;
             }
         }
         if (Input.GetKeyUp("down") && Input.GetKeyUp(KeyCode.S))
@@ -177,9 +176,9 @@ public class ShipMoveBehavior : MonoBehaviour {
         if (Input.GetKey("left") || Input.GetKey(KeyCode.Q))
         {
             m_Left = true;
-            if (m_IsUsingGamePad == true)
+            if (m_Ship.m_IsUsingGamePad == true)
             {
-                m_IsUsingGamePad = false;
+                m_Ship.m_IsUsingGamePad = false;
             }
         }
         if (Input.GetKeyUp("left") && Input.GetKeyUp(KeyCode.Q))
@@ -190,9 +189,9 @@ public class ShipMoveBehavior : MonoBehaviour {
         if (Input.GetKey("right") || Input.GetKey(KeyCode.D))
         {
             m_Right = true;
-            if (m_IsUsingGamePad == true)
+            if (m_Ship.m_IsUsingGamePad == true)
             {
-                m_IsUsingGamePad = false;
+                m_Ship.m_IsUsingGamePad = false;
             }
         }
         if (Input.GetKeyUp("right") && Input.GetKeyUp(KeyCode.D))
