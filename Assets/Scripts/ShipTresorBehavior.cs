@@ -41,24 +41,28 @@ public class ShipTresorBehavior : MonoBehaviour {
                 Destroy(other.transform.parent.gameObject);
             }
         }
+      
+    }
+
+    void OnTriggerStay(Collider other)
+    {
         if (other.tag == "Colonie")
         {
-            if (other.gameObject.GetComponent<Colonie>().m_IsGreen == m_Ship.m_IsGreen)
+            if ((other.gameObject.GetComponent<ColonieSystem>().m_Colonie.m_IsGreen==true && m_Ship.m_IsGreen==true) || (other.gameObject.GetComponent<ColonieSystem>().m_Colonie.m_IsOrange== true && m_Ship.m_IsGreen == false))
             {
                 m_Ship.m_NearFromColonie = true;
-                m_Colonie = other.gameObject.GetComponent<Colonie>();
+                m_Colonie = other.gameObject.GetComponent<ColonieSystem>().m_Colonie;
             }
         }
     }
+
+
     void OnTriggerExit(Collider other)
     {
         if (other.tag == "Colonie")
         {
-            if (other.gameObject.GetComponent<Colonie>().m_IsGreen == m_Ship.m_IsGreen)
-            {
                 m_Ship.m_NearFromColonie = false;
                 m_Colonie = null;
-            }
         }
     }
     #endregion
@@ -155,7 +159,6 @@ public class ShipTresorBehavior : MonoBehaviour {
                 }
 
             }
-
             else
             {
                 Instantiate(m_TresorPrefab, m_EjectPosition.position, m_TresorPrefab.transform.rotation);

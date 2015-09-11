@@ -73,7 +73,7 @@ public class ShipMoveBehavior : MonoBehaviour {
             }
 
             m_MoveMaxSpeed = m_Ship.m_CSpeed / 10;
-            m_RotateSpeed = m_MoveMaxSpeed * 4;
+            
 
 
             //InputDetection for etablish which button is pushed 
@@ -86,6 +86,11 @@ public class ShipMoveBehavior : MonoBehaviour {
             {
                 m_MoveSpeed = m_MoveMaxSpeed;
                 m_IsMoving = true;
+                m_RotateSpeed = m_MoveMaxSpeed;
+            }
+            else
+            {
+                m_RotateSpeed = m_MoveMaxSpeed * 4;
             }
 
             // Move the ship

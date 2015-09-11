@@ -7,8 +7,8 @@ public class ColonieSystem : MonoBehaviour {
     int m_GreenShipNear;
     int m_OrangeShipNear;
 
-
-    Colonie m_Colonie;
+    [HideInInspector]
+    public Colonie m_Colonie;
 
     // Use this for initialization
     void Start()

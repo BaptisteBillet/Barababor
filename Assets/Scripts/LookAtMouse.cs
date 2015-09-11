@@ -12,6 +12,9 @@ public class LookAtMouse : MonoBehaviour
 
     bool m_IsGamepadMode;
 
+    bool m_AimLock;
+
+
     void Start()
     {
         mousePos = Input.mousePosition;
@@ -60,13 +63,20 @@ public class LookAtMouse : MonoBehaviour
 
             // last_mousePos = mousePos;
         }
-        else if (m_IsGamepadMode == true && (Input.GetAxis("R_XAxis_1") == 0) && (Input.GetAxis("R_YAxis_1") == 0))
+        else if (m_IsGamepadMode == true && (Input.GetAxis("R_XAxis_1") == 0) && (Input.GetAxis("R_YAxis_1") == 0) && m_AimLock==true)
         {
             float angle = Mathf.Atan2(last_GamepadPos.y, last_GamepadPos.x) * Mathf.Rad2Deg;
             transform.rotation = Quaternion.Euler(new Vector3(0, angle + 90, 0));
             m_Ship.m_AngleAttack = angle;
             m_IsGamepadMode = true;
         }
+
+
+        if (Input.GetButtonDown("R_StickClick"))
+        {
+            m_AimLock = !m_AimLock;
+        }
+
 
     }
 }

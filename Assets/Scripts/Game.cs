@@ -119,7 +119,6 @@ public class Game : MonoBehaviour {
         }
         else
         {
-            Debug.Log("add");
             m_OrangeTresors += quantity;
         }
         UIManager.instance.ActualiseGlobalTresors();
