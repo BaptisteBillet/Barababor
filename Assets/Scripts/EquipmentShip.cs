@@ -38,6 +38,8 @@ public class EquipmentShip : MonoBehaviour {
     [HideInInspector]
     public ShipEquipementBehavior m_ShipEquipmentBehavior;
 
+
+
     void Start()
     {
         m_CanBeUsed = true;
@@ -135,7 +137,6 @@ public class EquipmentShip : MonoBehaviour {
 
     }
 
-
     public void EquipmentManager()
     {
         //If the Equipment is Available
@@ -196,8 +197,45 @@ public class EquipmentShip : MonoBehaviour {
         m_CanBeUsed = true;
     }
 
+    private GameObject DefineBullet()
+    {
+        GameObject bullet=null;
+
+        switch (m_Weapon)
+        {
+            case WeaponList.LeBonVieuxCanonDesFamilles:
+                bullet = m_ShipEquipmentBehavior.m_BulletPlayer;
+                bullet.GetComponent<Bullet>().m_SelfDirected = false;
+                bullet.GetComponent<Bullet>().m_MoveSpeed = 10;
+                bullet.GetComponent<Bullet>().m_AsAState = false;
+                bullet.transform.position = m_ShipEquipmentBehavior.m_DirectionScript.gameObject.transform.position;
+                bullet.transform.rotation = m_ShipEquipmentBehavior.m_DirectionScript.gameObject.transform.rotation;
+                break;
+            case WeaponList.SalveDePetitPlomb:
+
+                break;
+            case WeaponList.LourdParpaingDeDureRealite:
+
+                break;
+        }
+
+        //Common
+        bullet.GetComponent<Bullet>().m_Damages = m_Damage;
+        bullet.GetComponent<Bullet>().m_IsGreen = m_ShipEquipmentBehavior.m_Ship.m_IsGreen;
+        bullet.GetComponent<Bullet>().m_IsNeutral = false;
+
+        //return
+        return bullet;
+    }
+
+
     void UseTheEquipment()
     {
+        GameObject bullet=null;
+        GameObject bulletInstance=null;
+        GameObject lanceur= m_ShipEquipmentBehavior.m_Ship.m_ShipCenter;
+       
+
         switch (m_AimsMode)
         {
             case AimsMode.Cone:
@@ -207,6 +245,24 @@ public class EquipmentShip : MonoBehaviour {
             case AimsMode.StraightShoot:
                 //Effect
                 m_ShipEquipmentBehavior.m_Ship.m_ShipEffectsBehavior.ShootWhithCanon((float)m_ShipEquipmentBehavior.GetAngleOfAims(),true);
+
+                bullet = DefineBullet();
+
+                lanceur = m_ShipEquipmentBehavior.m_DirectionScript.gameObject;
+                for (int i=0;i< m_Width+1;i++)
+                {
+                    if(i==0)
+                    {
+                        bulletInstance = Instantiate(bullet, new Vector3(lanceur.transform.position.x + i, lanceur.transform.position.y+1, lanceur.transform.position.z), bullet.transform.rotation) as GameObject;
+                    }
+                    else
+                    {
+                        bulletInstance = Instantiate(bullet, new Vector3(lanceur.transform.position.x + i, lanceur.transform.position.y+1, lanceur.transform.position.z), bullet.transform.rotation) as GameObject;
+                        bulletInstance = Instantiate(bullet, new Vector3(lanceur.transform.position.x - i, lanceur.transform.position.y+1, lanceur.transform.position.z), bullet.transform.rotation) as GameObject;
+                    }
+                }
+
+
                 break;
 
             case AimsMode.Aura:
@@ -234,10 +290,6 @@ public class EquipmentShip : MonoBehaviour {
                 break;
 
         }
-
-
-
-
 
         //Reset
         m_ShipEquipmentBehavior.m_ShipViewPoint.ResetAllAims();

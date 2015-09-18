@@ -55,6 +55,7 @@ public class ColonieFortification : MonoBehaviour {
 
         m_Colonie.m_ColonieMaxLife = m_CabaneLife + m_Colonie.m_ColonieLevel * m_FortificationLife;
         m_Colonie.m_ColonieLife = m_Colonie.m_ColonieMaxLife;
+
         m_Colonie.ActualizeUIColonisation();
         ConstructionFortificationGraphismes();
 
@@ -96,7 +97,7 @@ public class ColonieFortification : MonoBehaviour {
         m_Colonie.ActualizeUIColonisation();
     }
 
-    public void ResetFortificationGraphismes()
+    void ResetFortificationGraphismes()
     {
         StopAllCoroutines();
         m_timer = 0;

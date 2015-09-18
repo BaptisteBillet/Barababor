@@ -27,6 +27,9 @@ public class ShipEquipementBehavior : MonoBehaviour {
     public GameObject m_ShipAims;
     public LookAtMouse m_DirectionScript;
 
+    public GameObject m_BulletPlayer;
+
+
 	// Use this for initialization
 	void Awake ()
     {

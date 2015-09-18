@@ -21,7 +21,7 @@ public class Bullet : MonoBehaviour
     public int m_StateValue;
     public float m_StateTime;
 
-
+    public float m_MoveSpeed;
 
     //Self Directed0
     Vector3 m_InitialPosition;
@@ -35,39 +35,52 @@ public class Bullet : MonoBehaviour
         m_Rigidbody=GetComponent<Rigidbody>();
         m_InitialPosition = this.transform.position;
         
-        m_StartTime = Time.time;
-        m_JourneyLength = Vector3.Distance(m_InitialPosition, m_Cible.transform.position);
+
+        
+
+        if (m_SelfDirected)
+        {
+            m_StartTime = Time.time;
+            m_JourneyLength = Vector3.Distance(m_InitialPosition, m_Cible.transform.position);
+        }
+      
     }
 
     void Update()
     {
-        if (m_Cible != null)
-        {
-            if (m_SelfDirected)
+       if (m_SelfDirected)
             {
-                float distCovered = (Time.time - m_StartTime) * m_SpeedOfBullet;
-                float fracJourney = distCovered / m_JourneyLength;
-
                 if (m_Cible != null)
                 {
-                    transform.position = Vector3.Lerp(m_InitialPosition, m_Cible.transform.position, fracJourney);
+                    float distCovered = (Time.time - m_StartTime) * m_SpeedOfBullet;
+                    float fracJourney = distCovered / m_JourneyLength;
+
+                    if (m_Cible != null)
+                    {
+                        transform.position = Vector3.Lerp(m_InitialPosition, m_Cible.transform.position, fracJourney);
+                    }
+                    else
+                    {
+                        DestroyMe();
+                    }
                 }
                 else
                 {
                     DestroyMe();
                 }
-
             }
-        }
-        else
-        {
-            DestroyMe();
-        }
+            else
+            {
+                m_Rigidbody.velocity = transform.forward * m_MoveSpeed;
+            }
+        
+        
     }
 
 
     protected void DestroyMe()
     {
+
         Destroy(this.gameObject);
     }
 }

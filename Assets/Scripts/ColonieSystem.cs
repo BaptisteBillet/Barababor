@@ -138,6 +138,21 @@ public class ColonieSystem : MonoBehaviour {
         }
     }
 
+    public void TakeDamage(int damages)
+    {
+        if(m_Colonie.m_IsNeutre==false)
+        {
+            m_Colonie.m_ColonieLife -= damages;
+            if(m_Colonie.m_ColonieLife<0)
+            {
+                m_Colonie.m_ColonieLife =0;
+            }
+
+            m_Colonie.ActualizeUIColonisation();
+        }
+    }
+
+
 }
 
 
