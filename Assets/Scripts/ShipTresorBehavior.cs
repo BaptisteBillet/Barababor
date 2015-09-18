@@ -103,6 +103,7 @@ public class ShipTresorBehavior : MonoBehaviour {
             //If Colonie
             else if (m_Ship.m_NearFromColonie)
             {
+                Debug.Log("a");
                 if (m_Colonie.CanLooseTresor())
                 {
                     m_Ship.m_CCapacity++;
@@ -244,8 +245,7 @@ public class ShipTresorBehavior : MonoBehaviour {
         //DPad Haut
         if (Input.GetAxis("DPad_YAxis_1") < 0 || Input.GetKey(KeyCode.C))
         {
-           
-            if (m_Ship.m_NearFromHomeHarbor)
+            if (m_Ship.m_NearFromHomeHarbor || m_Ship.m_NearFromColonie)
             {
                 if (m_ChargingTresor == false)
                 {

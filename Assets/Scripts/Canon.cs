@@ -98,7 +98,6 @@ public class Canon : MonoBehaviour {
 
     void Shoot()
     {
-        Debug.Log("Shoot");
         Instantiate(m_Particule, m_ParticuleStartPosition.transform.position, m_Particule.transform.rotation);
         m_Bullet = Instantiate(m_BulletPrefab, m_BulletStartPosition.transform.position, m_BulletPrefab.transform.rotation) as GameObject;
         m_Bullet.GetComponent<Bullet>().m_Cible = m_Cible.GetComponent<Ship>().m_ShipCenter;

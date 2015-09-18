@@ -3,35 +3,73 @@ using System.Collections;
 
 public class ShipEquipementBehavior : MonoBehaviour {
 
-    Ship m_Ship;
+    //Main Parent
+    [HideInInspector]
+    public Ship m_Ship;
 
-    public GameObject[] m_EquipementArray = new GameObject[4];
+    //Action List of Equipment
+    public GameObject[] m_EquipmentArray = new GameObject[4];
 
+    //Instance
     EquipmentShip m_EquipmentShip;
 
+    //To be sure the player can't use an action that is currently used
     bool m_ActionCurrentlyUsed;
 
+    //For Gamepad
     bool m_TriggerLUp;
     bool m_TriggerRUp;
+
+    //ViewPoint
+    [HideInInspector]
+    public ShipViewPoint m_ShipViewPoint;
+
+    public GameObject m_ShipAims;
+    public LookAtMouse m_DirectionScript;
+
 	// Use this for initialization
-	void Start ()
+	void Awake ()
     {
+        //No action currently used
         m_ActionCurrentlyUsed = false;
+
+        //Get the main script
         m_Ship = GetComponent<Ship>();
 
-        foreach (GameObject go in m_EquipementArray)
+        m_ShipViewPoint = GetComponent<ShipViewPoint>();
+
+        int number = -1;
+
+        //If they are Equipment equipt in the Equipment Array, then we linked it to this script
+        foreach (GameObject go in m_EquipmentArray)
         {
             if (go != null)
             {
-                m_EquipmentShip = go.GetComponent<EquipmentShip>();
-                m_EquipmentShip.m_ShipEquipmentBehavior = this;
+                if(go.GetComponent<EquipmentShip>())
+                {
+                    m_EquipmentShip = go.GetComponent<EquipmentShip>();
+                    m_EquipmentShip.m_ShipEquipmentBehavior = this;
+                    number++;
+                    m_EquipmentShip.m_ActionNumber = number;
+                }
             }
         }
     }
 	
-    void ChangeTheActionCurrentlyUsed()
+
+    void ChangeTheActionCurrentlyUsed(int number)
     {
-        StopUsingAnyAction();
+
+        if(m_EquipmentShip!= m_EquipmentArray[number].GetComponent<EquipmentShip>())
+        {
+            //We stop other action
+            StopUsingAnyAction();
+            m_EquipmentShip = m_EquipmentArray[number].GetComponent<EquipmentShip>();
+        }
+        //Let's do the action, aim first, use after
+        m_EquipmentShip.EquipmentManager();
+
+        //We currently use an action
         m_ActionCurrentlyUsed = true;
     }
 
@@ -39,7 +77,7 @@ public class ShipEquipementBehavior : MonoBehaviour {
     {
         m_ActionCurrentlyUsed = false;
 
-        foreach(GameObject go in m_EquipementArray)
+        foreach(GameObject go in m_EquipmentArray)
         {
             if(go!=null)
             {
@@ -47,49 +85,35 @@ public class ShipEquipementBehavior : MonoBehaviour {
                 m_EquipmentShip.StopUsing();
             }
         }
+        
     }
 
     // Update is called once per frame
-	void Update ()
+    void Update()
     {
+
         #region Input Action
         if (Input.GetButtonDown("1"))
         {
-            if (m_EquipementArray[0]!=null)
-            {
-                ChangeTheActionCurrentlyUsed();
-                m_EquipmentShip = m_EquipementArray[0].GetComponent<EquipmentShip>();
-            }
-            
+            ButtonAction(1);
+
         }
 
-        if (Input.GetButtonDown("2") || (Input.GetAxis("TriggersL_1")==1 && m_TriggerLUp==true))
+        if (Input.GetButtonDown("2") || (Input.GetAxis("TriggersL_1") == 1 && m_TriggerLUp == true))
         {
             m_TriggerLUp = false;
-            if (m_EquipementArray[1] != null)
-            {
-                ChangeTheActionCurrentlyUsed();
-                m_EquipmentShip = m_EquipementArray[1].GetComponent<EquipmentShip>();
-            }
+            ButtonAction(2);
         }
 
         if (Input.GetButtonDown("3") || (Input.GetAxis("TriggersR_1") == 1 && m_TriggerRUp == true))
         {
             m_TriggerRUp = false;
-            if (m_EquipementArray[2] != null)
-            {
-                ChangeTheActionCurrentlyUsed();
-                m_EquipmentShip = m_EquipementArray[2].GetComponent<EquipmentShip>();
-            }
+            ButtonAction(3);
         }
 
         if (Input.GetButtonDown("4"))
         {
-            if (m_EquipementArray[3] != null)
-            {
-                ChangeTheActionCurrentlyUsed();
-                m_EquipmentShip = m_EquipementArray[3].GetComponent<EquipmentShip>();
-            }
+            ButtonAction(4);
         }
         #endregion
 
@@ -109,6 +133,26 @@ public class ShipEquipementBehavior : MonoBehaviour {
         {
             StopUsingAnyAction();
         }
-
     }
+
+    public void ButtonAction(int number)
+    {
+        if (m_EquipmentArray[number-1] != null)
+        {
+            ChangeTheActionCurrentlyUsed(number-1);
+            UIManager.instance.ButtonActionAnimator(number - 1, "Use");
+        }
+    }
+
+    public int GetAngleOfAims()
+    {
+        int angle;
+        angle = (int)(m_DirectionScript.transform.localRotation.eulerAngles.y);
+        if( angle<0)
+        {
+            angle += 359;
+        }
+        return angle;
+    }
+
 }

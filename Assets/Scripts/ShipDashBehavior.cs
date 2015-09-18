@@ -9,15 +9,20 @@ public class ShipDashBehavior : MonoBehaviour {
     bool m_FirstDashFromStick;
 
     float m_StickDelay;
-    float m_DashCoolDown;
+
+    [HideInInspector]
+    public float m_DashCoolDown;
 
     public bool m_IsDashReady;
 
     int m_Desceleration=7;
     float m_DelayDesceleration=0.001f;
 
-	// Use this for initialization
-	void Start ()
+    [HideInInspector]
+    public float timer = 0;
+
+    // Use this for initialization
+    void Start ()
     {
         m_Ship = GetComponent<Ship>();
         m_IsDashReady = true;
@@ -31,7 +36,6 @@ public class ShipDashBehavior : MonoBehaviour {
         //If the dash can be done
         if (m_IsDashReady)
         {
-
             //Keyboard
             if (Input.GetButtonDown("Shift") || Input.GetButtonDown("A"))
             {
@@ -105,16 +109,21 @@ public class ShipDashBehavior : MonoBehaviour {
 
     IEnumerator DashCooldown()
     {
-        float timer = 0;
-
         m_DashCoolDown = m_DashCoolDown * (m_Ship.m_CCooldown / 100);
+
+        timer = 0;
+        UIManager.instance.ActualizeUIDashBar();
 
         while (timer < m_DashCoolDown)
         {
             yield return new WaitForSeconds(0.1f);
             timer += 0.1f;
+            UIManager.instance.ActualizeUIDashBar();
             m_DashCoolDown = m_DashCoolDown * (m_Ship.m_CCooldown / 100);
         }
+
+        timer = m_DashCoolDown;
+        UIManager.instance.ActualizeUIDashBar();
 
         m_IsDashReady = true;
 
@@ -128,7 +137,11 @@ public class ShipDashBehavior : MonoBehaviour {
 
         m_Ship.m_ShipMoveBehavior.Dash(true);
 
+        m_Ship.m_ShipSpurBehavior.ActivateSpur(true);
+
         yield return new WaitForSeconds(1);
+
+        m_Ship.m_ShipSpurBehavior.ActivateSpur(false);
 
         StartCoroutine(DashDescelleration((int)(m_Ship.m_CSpeed + difference)));
 

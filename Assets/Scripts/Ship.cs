@@ -2,9 +2,6 @@
 using System.Collections;
 using System.Collections.Generic;
 
-
-
-
 public enum EArchetype
 {
     Assault,
@@ -149,6 +146,12 @@ public class Ship : MonoBehaviour {
     public ShipEquipementBehavior m_ShipEquipementBehavior;
     [HideInInspector]
     public ShipDashBehavior m_ShipDashBehavior;
+    [HideInInspector]
+    public ShipViewPoint m_ShipViewPoint;
+    [HideInInspector]
+    public ShipEffectsBehavior m_ShipEffectsBehavior;
+    [HideInInspector]
+    public ShipSpurBehavior m_ShipSpurBehavior;
 
     //For others ship
     public int m_ExperienceWin;
@@ -158,8 +161,6 @@ public class Ship : MonoBehaviour {
     public bool m_NearFromColonie;
     // If the player use the gamepad or the keyboard
     public bool m_IsUsingGamePad;
-    //For the direction of the pointer
-    public float m_AngleAttack;
 
     //For Material
     [Header("Material")]
@@ -187,6 +188,9 @@ public class Ship : MonoBehaviour {
         m_ShipMaterialBehavior = GetComponent<ShipMaterialBehavior>();
         m_ShipEquipementBehavior = GetComponent<ShipEquipementBehavior>();
         m_ShipDashBehavior = GetComponent<ShipDashBehavior>();
+        m_ShipViewPoint = GetComponent<ShipViewPoint>();
+        m_ShipEffectsBehavior = GetComponent<ShipEffectsBehavior>();
+        m_ShipSpurBehavior = GetComponent<ShipSpurBehavior>();
 
         if (m_ShipMoveBehavior == null) { Debug.LogError("Miss m_ShipMoveBehavior") ;}
         if (m_ShipCameraBehavior == null) { Debug.LogError("Miss m_ShipCameraBehavior"); }
@@ -198,6 +202,8 @@ public class Ship : MonoBehaviour {
         if (m_ShipMaterialBehavior == null) { Debug.LogError("Miss m_ShipMaterialBehavior"); }
         if (m_ShipEquipementBehavior == null) { Debug.LogError("Miss m_ShipEquipementBehavior"); }
         if (m_ShipDashBehavior == null) { Debug.LogError("Miss m_ShipDashBehavior"); }
+        if (m_ShipViewPoint == null) { Debug.LogError("Miss m_ShipViewPoint"); }
+        if (m_ShipSpurBehavior == null) { Debug.LogError("Miss m_ShipSpurBehavior"); }
 
         //For UI
         if (m_IsGreen)

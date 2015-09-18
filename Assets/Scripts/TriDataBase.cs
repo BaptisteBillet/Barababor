@@ -2,6 +2,15 @@
 using System.Collections;
 using System.Collections.Generic;
 
+
+public enum WeaponList
+{
+    LeBonVieuxCanonDesFamilles,
+    SalveDePetitPlomb,
+    LourdParpaingDeDureRealite,
+    None
+}
+
 public class TriDataBase : MonoBehaviour
 {
     public Dictionary<string, Element> m_BowDico = new Dictionary<string, Element>();
@@ -147,10 +156,14 @@ public class TriDataBase : MonoBehaviour
 
             m_Equipement.m_Level = row._Level;
             m_Equipement.m_LevelUp = row._LevelUp;
+            m_Equipement.m_Damage = row._Damage;
+            m_Equipement.m_DamageUpgrade = row._DamageUpgrade;
             m_Equipement.m_Range = row._Range;
             m_Equipement.m_RangeUpgrade = row._RangeUpgrade;
-            //m_Equipement.m_Cooldown = row._Cooldown;
-            //m_Equipement.m_CooldownUpgrade = row._CooldownUpgrade;
+            m_Equipement.m_Width = row._Width;
+            m_Equipement.m_WidthUpgrade = row._WidthUpgrade;
+            m_Equipement.m_Cooldown = (int)row._Cooldown;
+            m_Equipement.m_CooldownUpgrade = (int)row._CooldownUpgrade;
             m_Equipement.m_ShootType = row._ShootType;
             m_Equipement.m_ShootTypeUpgrade = row._ShootTypeUpgrade;
             m_Equipement.m_Cost = row._Cost;
@@ -158,8 +171,10 @@ public class TriDataBase : MonoBehaviour
             m_Equipement.m_Rank = row._Rank;
             m_Equipement.m_State1 = row._State1;
             m_Equipement.m_State2 = row._State2;
-            m_Equipement.m_Damage = row._Damage;
-            m_Equipement.m_DamageUpgrade = row._DamageUpgrade;
+            m_Equipement.m_Description = row._Description;
+            m_Equipement.m_Type = row._Type;
+            m_Equipement.m_ShownName = row._ShownName;
+
 
             m_Equipement.m_Name = row._Name;
 
@@ -171,6 +186,5 @@ public class TriDataBase : MonoBehaviour
         #endregion
 
     }
-
 
 }

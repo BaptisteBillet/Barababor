@@ -19,8 +19,10 @@ namespace Google2u
 		public string _Name;
 		public int _Damage;
 		public int _DamageUpgrade;
-		public int _Range;
-		public int _RangeUpgrade;
+		public float _Range;
+		public float _RangeUpgrade;
+		public float _Width;
+		public float _WidthUpgrade;
 		public float _Cooldown;
 		public float _CooldownUpgrade;
 		public int _ShootType;
@@ -31,7 +33,9 @@ namespace Google2u
 		public string _State1;
 		public string _State2;
 		public string _Description;
-		public WEAPONRow(string __ID, string __Level, string __LevelUp, string __Name, string __Damage, string __DamageUpgrade, string __Range, string __RangeUpgrade, string __Cooldown, string __CooldownUpgrade, string __ShootType, string __ShootTypeUpgrade, string __Cost, string __Grade, string __Rank, string __State1, string __State2, string __Description) 
+		public string _Type;
+		public string _ShownName;
+		public WEAPONRow(string __ID, string __Level, string __LevelUp, string __Name, string __Damage, string __DamageUpgrade, string __Range, string __RangeUpgrade, string __Width, string __WidthUpgrade, string __Cooldown, string __CooldownUpgrade, string __ShootType, string __ShootTypeUpgrade, string __Cost, string __Grade, string __Rank, string __State1, string __State2, string __Description, string __Type, string __ShownName) 
 		{
 			{
 			int res;
@@ -63,18 +67,32 @@ namespace Google2u
 					Debug.LogError("Failed To Convert _DamageUpgrade string: "+ __DamageUpgrade +" to int");
 			}
 			{
-			int res;
-				if(int.TryParse(__Range, NumberStyles.Any, CultureInfo.InvariantCulture, out res))
+			float res;
+				if(float.TryParse(__Range, NumberStyles.Any, CultureInfo.InvariantCulture, out res))
 					_Range = res;
 				else
-					Debug.LogError("Failed To Convert _Range string: "+ __Range +" to int");
+					Debug.LogError("Failed To Convert _Range string: "+ __Range +" to float");
 			}
 			{
-			int res;
-				if(int.TryParse(__RangeUpgrade, NumberStyles.Any, CultureInfo.InvariantCulture, out res))
+			float res;
+				if(float.TryParse(__RangeUpgrade, NumberStyles.Any, CultureInfo.InvariantCulture, out res))
 					_RangeUpgrade = res;
 				else
-					Debug.LogError("Failed To Convert _RangeUpgrade string: "+ __RangeUpgrade +" to int");
+					Debug.LogError("Failed To Convert _RangeUpgrade string: "+ __RangeUpgrade +" to float");
+			}
+			{
+			float res;
+				if(float.TryParse(__Width, NumberStyles.Any, CultureInfo.InvariantCulture, out res))
+					_Width = res;
+				else
+					Debug.LogError("Failed To Convert _Width string: "+ __Width +" to float");
+			}
+			{
+			float res;
+				if(float.TryParse(__WidthUpgrade, NumberStyles.Any, CultureInfo.InvariantCulture, out res))
+					_WidthUpgrade = res;
+				else
+					Debug.LogError("Failed To Convert _WidthUpgrade string: "+ __WidthUpgrade +" to float");
 			}
 			{
 			float res;
@@ -116,9 +134,11 @@ namespace Google2u
 			_State1 = __State1.Trim();
 			_State2 = __State2.Trim();
 			_Description = __Description.Trim();
+			_Type = __Type.Trim();
+			_ShownName = __ShownName.Trim();
 		}
 
-		public int Length { get { return 17; } }
+		public int Length { get { return 21; } }
 
 		public string this[int i]
 		{
@@ -155,34 +175,46 @@ namespace Google2u
 					ret = _RangeUpgrade.ToString();
 					break;
 				case 7:
-					ret = _Cooldown.ToString();
+					ret = _Width.ToString();
 					break;
 				case 8:
-					ret = _CooldownUpgrade.ToString();
+					ret = _WidthUpgrade.ToString();
 					break;
 				case 9:
-					ret = _ShootType.ToString();
+					ret = _Cooldown.ToString();
 					break;
 				case 10:
-					ret = _ShootTypeUpgrade.ToString();
+					ret = _CooldownUpgrade.ToString();
 					break;
 				case 11:
-					ret = _Cost.ToString();
+					ret = _ShootType.ToString();
 					break;
 				case 12:
-					ret = _Grade.ToString();
+					ret = _ShootTypeUpgrade.ToString();
 					break;
 				case 13:
-					ret = _Rank.ToString();
+					ret = _Cost.ToString();
 					break;
 				case 14:
-					ret = _State1.ToString();
+					ret = _Grade.ToString();
 					break;
 				case 15:
-					ret = _State2.ToString();
+					ret = _Rank.ToString();
 					break;
 				case 16:
+					ret = _State1.ToString();
+					break;
+				case 17:
+					ret = _State2.ToString();
+					break;
+				case 18:
 					ret = _Description.ToString();
+					break;
+				case 19:
+					ret = _Type.ToString();
+					break;
+				case 20:
+					ret = _ShownName.ToString();
 					break;
 			}
 
@@ -215,6 +247,12 @@ namespace Google2u
 				case "RangeUpgrade":
 					ret = _RangeUpgrade.ToString();
 					break;
+				case "Width":
+					ret = _Width.ToString();
+					break;
+				case "WidthUpgrade":
+					ret = _WidthUpgrade.ToString();
+					break;
 				case "Cooldown":
 					ret = _Cooldown.ToString();
 					break;
@@ -245,6 +283,12 @@ namespace Google2u
 				case "Description":
 					ret = _Description.ToString();
 					break;
+				case "Type":
+					ret = _Type.ToString();
+					break;
+				case "ShownName":
+					ret = _ShownName.ToString();
+					break;
 			}
 
 			return ret;
@@ -259,6 +303,8 @@ namespace Google2u
 			ret += "{" + "DamageUpgrade" + " : " + _DamageUpgrade.ToString() + "} ";
 			ret += "{" + "Range" + " : " + _Range.ToString() + "} ";
 			ret += "{" + "RangeUpgrade" + " : " + _RangeUpgrade.ToString() + "} ";
+			ret += "{" + "Width" + " : " + _Width.ToString() + "} ";
+			ret += "{" + "WidthUpgrade" + " : " + _WidthUpgrade.ToString() + "} ";
 			ret += "{" + "Cooldown" + " : " + _Cooldown.ToString() + "} ";
 			ret += "{" + "CooldownUpgrade" + " : " + _CooldownUpgrade.ToString() + "} ";
 			ret += "{" + "ShootType" + " : " + _ShootType.ToString() + "} ";
@@ -269,16 +315,18 @@ namespace Google2u
 			ret += "{" + "State1" + " : " + _State1.ToString() + "} ";
 			ret += "{" + "State2" + " : " + _State2.ToString() + "} ";
 			ret += "{" + "Description" + " : " + _Description.ToString() + "} ";
+			ret += "{" + "Type" + " : " + _Type.ToString() + "} ";
+			ret += "{" + "ShownName" + " : " + _ShownName.ToString() + "} ";
 			return ret;
 		}
 	}
 	public sealed class WEAPON : IGoogle2uDB
 	{
 		public enum rowIds {
-			Weapon1
+			Weapon1, LeBonVieuxCanonDesFamilles, SalveDePetitPlomb, LourdParpaingDeDureRealite
 		};
 		public string [] rowNames = {
-			"Weapon1"
+			"Weapon1", "LeBonVieuxCanonDesFamilles", "SalveDePetitPlomb", "LourdParpaingDeDureRealite"
 		};
 		public System.Collections.Generic.List<WEAPONRow> Rows = new System.Collections.Generic.List<WEAPONRow>();
 
@@ -295,7 +343,10 @@ namespace Google2u
 
 		private WEAPON()
 		{
-			Rows.Add( new WEAPONRow("Weapon1", "1", "1", "Weapon1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "", "", "", "", ""));
+			Rows.Add( new WEAPONRow("Weapon1", "1", "1", "Weapon1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "", "", "", "", "", "Weapon", ""));
+			Rows.Add( new WEAPONRow("LeBonVieuxCanonDesFamilles", "1", "0", "LeBonVieuxCanonDesFamilles", "10", "0", "3", "0", "1", "1", "5", "0", "2", "0", "10", "", "", "", "", "Canon", "Weapon", "Le bon vieux canon des familles"));
+			Rows.Add( new WEAPONRow("SalveDePetitPlomb", "1", "0", "SalveDePetitPlomb", "5", "0", "2", "0", "1", "1", "5", "0", "1", "0", "10", "", "", "", "", "Plomb", "Weapon", "Salve de petit plomb"));
+			Rows.Add( new WEAPONRow("LourdParpaingDeDureRealite", "1", "0", "LourdParpaingDeDureRealite", "20", "0", "5", "0", "1", "1", "5", "0", "6", "0", "10", "", "", "", "", "Parpin", "Weapon", "Lourd parpaing de dure réalité"));
 		}
 		public IGoogle2uRow GetGenRow(string in_RowString)
 		{

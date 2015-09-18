@@ -33,32 +33,46 @@ public class UIManager : MonoBehaviour {
 
     //PLAYER SPACE
     //LifeBar
+    [Header("Life")]
     public Image m_LifeBarFull;
     public Text m_LifeText;
     //ExperienceBar
+    [Header("Experience")]
     public Image m_ExperienceBarFull;
     public Text m_ExperienceText;
     public Text m_ExperienceMax;
     public Text m_ExperienceSlash;
     //States
+    [Header("States")]
     public Image[] m_StateImage = new Image[14];
+    public Image[] m_StateImageCooldown = new Image[9];
     public Sprite[] m_StateImageData = new Sprite[25];
     public Sprite m_Transparent;
     private Dictionary<string, Sprite> StateLibrary = new Dictionary<string, Sprite>();
     //Captain
+    [Header("Captain")]
     public RawImage m_CaptainFace;
     public Text m_CaptainRespawnTimer;
     //Icone
+    [Header("Icone")]
     public Image m_Icone;
     //PlayerLevel
+    [Header("PlayerLevel")]
     public Text m_PlayerLevelText;
     //TresorBar
+    [Header("Tresor")]
     public Image m_TresorBarFull;
     public Text m_TresorText;
     //ActionBar
+    [Header("Action")]
     public Image[] m_ActionImage = new Image[4];
-    
+    public Image[] m_ActionImageCooldown = new Image[4];
+    public Text[] m_ActionTextCooldown = new Text[4];
+    public Sprite[] m_ActionSprite = new Sprite[3];
+    public Animator[] m_ActionAnimator = new Animator[4];
+
     //ConsomableBar
+    [Header("Consomable")]
     public Image[] m_ConsomableBar = new Image[2];
 
     //CHAT 
@@ -66,6 +80,7 @@ public class UIManager : MonoBehaviour {
     //MiniMap
 
     //OtherInterface
+    [Header("Other")]
     public Text m_OtherLevel1;
     public Image m_OtherArchetype1;
     public Image m_OtherLifeBar1;
@@ -87,9 +102,11 @@ public class UIManager : MonoBehaviour {
     public Image m_OtherTresorBar4;
 
     //Stats
+    [Header("Stats")]
     public Text m_Stats;
 
     //Flotte
+    [Header("Flotte")]
     public Text m_Timer;
     public Image m_OrangeBar;
     public Image m_GreenBar;
@@ -101,6 +118,10 @@ public class UIManager : MonoBehaviour {
     public Text m_GreenShipwreck;
 
     public Text m_MaterialNumber;
+
+    //Dash
+    [Header("Dash")]
+    public Image m_DashFull;
 
     //
     float m_ExperienceZeroValue = -42f;
@@ -119,15 +140,21 @@ public class UIManager : MonoBehaviour {
     float m_BarOrangeMaxValue = 890.8f;
     float m_BarOrangePourcent = 4.604f;
 
+    float m_DashZeroValue = 533;
+    float m_DashMaxValue = 613f;
+    float m_DashPourcent = 0f;
+
     public GameObject m_DazzledMask;
 
     public Color m_Green;
 
     public Color m_Orange;
+
     #endregion
 
     void Start()
     {
+
         m_CaptainRespawnTimer.enabled = false;
 
         //Debug.Log(m_TresorBarFull.transform.position.x);
@@ -150,14 +177,15 @@ public class UIManager : MonoBehaviour {
         m_BarOrangePourcent =-( (m_BarOrangeZeroValue - m_BarOrangeMaxValue) / 100);
         #endregion
 
+
+        m_DashMaxValue = m_DashFull.transform.position.x;
+        m_DashPourcent= (Mathf.Abs(m_DashMaxValue - m_DashZeroValue)) / 100;
+
         foreach (Sprite sprite in m_StateImageData)
         {
             StateLibrary.Add(sprite.name, sprite);
             
         }
-
-
-
         Initialization();
     }
 
@@ -406,5 +434,88 @@ public class UIManager : MonoBehaviour {
         }
     }
 
+    public void ActualizeUIDashBar()
+    {
+
+        float barLevel = 0;
+
+        if (m_Ship.m_ShipDashBehavior.timer> 0)
+        {
+            barLevel = (m_Ship.m_ShipDashBehavior.timer * 100) / m_Ship.m_ShipDashBehavior.m_DashCoolDown;
+            m_DashFull.transform.position = new Vector3((barLevel * m_DashPourcent) + m_DashZeroValue, m_DashFull.transform.position.y, m_DashFull.transform.position.z);
+        }
+        else
+        {
+            m_DashFull.transform.position = new Vector3(m_DashZeroValue, m_DashFull.transform.position.y, m_DashFull.transform.position.z);
+        }
+    }
+
+    public void ButtonAction(int number)
+    {
+        m_Ship.m_ShipEquipementBehavior.ButtonAction(number);
+    }
+
+    public void InitializeActionBar(int number, WeaponList weapon)
+    {
+        int index = -1;
+
+        switch(weapon.ToString())
+        {
+            case "LeBonVieuxCanonDesFamilles":
+                index = 0;
+                break;
+
+            case "SalveDePetitPlomb":
+                index = 1;
+                break;
+
+            case "LourdParpaingDeDureRealite":
+                index = 2;
+                break;
+
+            default:
+                index = -1;
+                break;
+        }
+
+        if(index>=0)
+        {
+            m_ActionImage[number].sprite = m_ActionSprite[index];
+        }
+        
+
+    }
+
+    public void ActualizeAction(int number, float pourcent, int cooldown)
+    {
+        cooldown += 1;
+        m_ActionImageCooldown[number].fillAmount = pourcent;
+
+        if(pourcent <= 0 || pourcent > 0.99f)
+        {
+            m_ActionTextCooldown[number].enabled = false;
+        }
+        else
+        {
+            if (m_ActionTextCooldown[number].enabled == false)
+            {
+                m_ActionTextCooldown[number].enabled = true;
+            }
+
+            m_ActionTextCooldown[number].text = (cooldown).ToString();
+        }
+    }
+
+    public void ButtonActionAnimator(int number, string state)
+    {
+        if(state=="Use")
+        {
+            m_ActionAnimator[number].SetTrigger("Use");
+        }
+        else
+        {
+            m_ActionAnimator[number].SetTrigger("Ready");
+        }
+    }
 }
 

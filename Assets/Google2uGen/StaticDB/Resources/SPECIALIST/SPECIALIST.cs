@@ -19,7 +19,9 @@ namespace Google2u
 		public int _Value;
 		public string _Description;
 		public int _Cost;
-		public SPECIALISTRow(string __ID, string __Name, string __Speciality, string __Value, string __Description, string __Cost) 
+		public string _Type;
+		public string _ShownName;
+		public SPECIALISTRow(string __ID, string __Name, string __Speciality, string __Value, string __Description, string __Cost, string __Type, string __ShownName) 
 		{
 			_Name = __Name.Trim();
 			_Speciality = __Speciality.Trim();
@@ -38,9 +40,11 @@ namespace Google2u
 				else
 					Debug.LogError("Failed To Convert _Cost string: "+ __Cost +" to int");
 			}
+			_Type = __Type.Trim();
+			_ShownName = __ShownName.Trim();
 		}
 
-		public int Length { get { return 5; } }
+		public int Length { get { return 7; } }
 
 		public string this[int i]
 		{
@@ -70,6 +74,12 @@ namespace Google2u
 				case 4:
 					ret = _Cost.ToString();
 					break;
+				case 5:
+					ret = _Type.ToString();
+					break;
+				case 6:
+					ret = _ShownName.ToString();
+					break;
 			}
 
 			return ret;
@@ -95,6 +105,12 @@ namespace Google2u
 				case "Cost":
 					ret = _Cost.ToString();
 					break;
+				case "Type":
+					ret = _Type.ToString();
+					break;
+				case "ShownName":
+					ret = _ShownName.ToString();
+					break;
 			}
 
 			return ret;
@@ -107,16 +123,18 @@ namespace Google2u
 			ret += "{" + "Value" + " : " + _Value.ToString() + "} ";
 			ret += "{" + "Description" + " : " + _Description.ToString() + "} ";
 			ret += "{" + "Cost" + " : " + _Cost.ToString() + "} ";
+			ret += "{" + "Type" + " : " + _Type.ToString() + "} ";
+			ret += "{" + "ShownName" + " : " + _ShownName.ToString() + "} ";
 			return ret;
 		}
 	}
 	public sealed class SPECIALIST : IGoogle2uDB
 	{
 		public enum rowIds {
-			Specialist1
+			Specialist1, Specialist2
 		};
 		public string [] rowNames = {
-			"Specialist1"
+			"Specialist1", "Specialist2"
 		};
 		public System.Collections.Generic.List<SPECIALISTRow> Rows = new System.Collections.Generic.List<SPECIALISTRow>();
 
@@ -133,7 +151,8 @@ namespace Google2u
 
 		private SPECIALIST()
 		{
-			Rows.Add( new SPECIALISTRow("Specialist1", "Specialist1", "Damage", "5", "A specialist", "12"));
+			Rows.Add( new SPECIALISTRow("Specialist1", "Specialist1", "Damage", "5", "A specialist", "12", "Specialist", ""));
+			Rows.Add( new SPECIALISTRow("Specialist2", "Specialist2", "Damage", "5", "Another Specialist", "12", "Specialist", ""));
 		}
 		public IGoogle2uRow GetGenRow(string in_RowString)
 		{
