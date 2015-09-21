@@ -228,7 +228,6 @@ public class EquipmentShip : MonoBehaviour {
         return bullet;
     }
 
-
     void UseTheEquipment()
     {
         GameObject bullet=null;
@@ -249,16 +248,29 @@ public class EquipmentShip : MonoBehaviour {
                 bullet = DefineBullet();
 
                 lanceur = m_ShipEquipmentBehavior.m_DirectionScript.gameObject;
+
+
+                Debug.Log(lanceur.transform.rotation.eulerAngles);
+
+                float angle = lanceur.transform.rotation.eulerAngles.y;
+
+                float x = Mathf.Abs(Mathf.Cos(angle* Mathf.Deg2Rad));
+                float z = Mathf.Abs(Mathf.Sin(angle* Mathf.Deg2Rad));
+
+                Debug.Log(x + "    " + z);
+                               
+
                 for (int i=0;i< m_Width+1;i++)
                 {
                     if(i==0)
                     {
-                        bulletInstance = Instantiate(bullet, new Vector3(lanceur.transform.position.x + i, lanceur.transform.position.y+1, lanceur.transform.position.z), bullet.transform.rotation) as GameObject;
+                        bulletInstance = Instantiate(bullet, new Vector3(bullet.transform.position.x, lanceur.transform.position.y+1, lanceur.transform.position.z), lanceur.transform.rotation) as GameObject;
                     }
                     else
                     {
-                        bulletInstance = Instantiate(bullet, new Vector3(lanceur.transform.position.x + i, lanceur.transform.position.y+1, lanceur.transform.position.z), bullet.transform.rotation) as GameObject;
-                        bulletInstance = Instantiate(bullet, new Vector3(lanceur.transform.position.x - i, lanceur.transform.position.y+1, lanceur.transform.position.z), bullet.transform.rotation) as GameObject;
+                        bulletInstance = Instantiate(bullet, new Vector3((bullet.transform.position.x)+i*x , lanceur.transform.position.y+1, (lanceur.transform.position.z)+i*z), lanceur.transform.rotation) as GameObject;
+
+                        bulletInstance = Instantiate(bullet, new Vector3((bullet.transform.position.x)-i*x, lanceur.transform.position.y+1, (lanceur.transform.position.z)-i*z), lanceur.transform.rotation) as GameObject;
                     }
                 }
 

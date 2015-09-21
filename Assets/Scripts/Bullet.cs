@@ -71,7 +71,7 @@ public class Bullet : MonoBehaviour
             }
             else
             {
-                m_Rigidbody.velocity = transform.forward * m_MoveSpeed;
+            m_Rigidbody.velocity = transform.forward * m_MoveSpeed;
             }
         
         
