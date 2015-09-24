@@ -1,6 +1,9 @@
 ﻿using UnityEngine;
 using System.Collections;
 
+/// <summary>
+/// This class manage the play time
+/// </summary>
 public class TimeOfPlay : MonoBehaviour {
 
     public int seconds;
@@ -16,8 +19,12 @@ public class TimeOfPlay : MonoBehaviour {
 
         StartCoroutine(Clock());
 	}
-	
-	IEnumerator Clock()
+
+    /// <summary>
+    /// This coroutine manage the time system
+    /// </summary>
+    /// <returns></returns>
+    IEnumerator Clock()
     {
         while(this!=null)
         {
@@ -35,6 +42,7 @@ public class TimeOfPlay : MonoBehaviour {
                 }
 
             }
+            //Actualise regulary the UI Clock
             UIManager.instance.ActualizeUIClock();
         }
        

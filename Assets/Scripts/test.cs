@@ -1,6 +1,9 @@
 ﻿using UnityEngine;
 using System.Collections;
 
+/// <summary>
+/// The famous and unique Test class
+/// </summary>
 public class test : MonoBehaviour {
 
 	// Use this for initialization

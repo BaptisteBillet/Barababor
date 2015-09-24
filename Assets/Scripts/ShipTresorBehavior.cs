@@ -30,6 +30,10 @@ public class ShipTresorBehavior : MonoBehaviour {
         m_Ship = GetComponent<Ship>();
     }
 
+    /// <summary>
+    /// Manage the collision
+    /// </summary>
+    /// <param name="other"></param>
     #region Collisions
     void OnTriggerEnter(Collider other)
     {
@@ -67,7 +71,10 @@ public class ShipTresorBehavior : MonoBehaviour {
     }
     #endregion
 
-    #region Tresors
+    #region Tresors    
+    /// <summary>
+    /// Adds the tresor from chest.
+    /// </summary>
     void AddTresorFromChest()
     {
         if (m_Ship.m_CCapacity < m_Ship.m_CCapacityBase)
@@ -76,7 +83,9 @@ public class ShipTresorBehavior : MonoBehaviour {
             UIManager.instance.ActualizeUITresor();
         }
     }
-
+    /// <summary>
+    /// Adds the tresor.
+    /// </summary>
     public void AddTresor()
     {
         if (m_Ship.m_CCapacity<m_Ship.m_CCapacityBase)
@@ -123,7 +132,9 @@ public class ShipTresorBehavior : MonoBehaviour {
             }
         }
     }
-
+    /// <summary>
+    /// Looses the tresor.
+    /// </summary>
     public void LooseTresor()
     {
         if (m_Ship.m_CCapacity > 0)
@@ -173,7 +184,9 @@ public class ShipTresorBehavior : MonoBehaviour {
 
         }
     }
-
+    /// <summary>
+    /// Looses all tresor.
+    /// </summary>
     public void LooseAllTresor()
     {
         while(m_Ship.m_CCapacity>0)
@@ -181,12 +194,17 @@ public class ShipTresorBehavior : MonoBehaviour {
             LooseTresor();
         }
     }
-
+    /// <summary>
+    /// Delivers the tresor.
+    /// </summary>
     public void DeliverTresor()
     {
         UIManager.instance.ActualizeUITresor();
     }
-
+    /// <summary>
+    /// cs the droping tresor.
+    /// </summary>
+    /// <returns></returns>
     IEnumerator CDropingTresor()
     {
         yield return new WaitForSeconds(m_DelayForCharging);
@@ -197,7 +215,10 @@ public class ShipTresorBehavior : MonoBehaviour {
 
         }
     }
-
+    /// <summary>
+    /// cs the charging tresor.
+    /// </summary>
+    /// <returns></returns>
     IEnumerator CChargingTresor()
     {
         yield return new WaitForSeconds(m_DelayForCharging);

@@ -3,10 +3,17 @@ using System.Collections;
 using UnityEngine.UI;
 using System.Collections.Generic;
 
+
+/// <summary>
+/// /This class as for objective to Manage the entire PlayerShip and UI of the main Canvas.
+/// /It's use as a singleton in order to provide a easy-to-call procedure.
+/// </summary>
 public class UIManager : MonoBehaviour {
 
 
-
+    /// <summary>
+    /// The Singleton
+    /// </summary>
     #region Singleton
     static private UIManager s_Instance;
     static public UIManager instance
@@ -25,7 +32,7 @@ public class UIManager : MonoBehaviour {
     }
     #endregion
 
-
+    //The needed reference to the PlayerShip;
     public Ship m_Ship;
 
     #region Members declaration
@@ -123,45 +130,51 @@ public class UIManager : MonoBehaviour {
     [Header("Dash")]
     public Image m_DashFull;
 
-    //
+    //Data for the different bar.
+    #region Bar Data
+    //Experience
     float m_ExperienceZeroValue = -42f;
     float m_ExperienceMaxValue = 41.8f;
     float m_ExperiencePourcent=0.838f;
-
+    //Life
     float m_BarZeroValue = 430.079f;
     float m_BarMaxValue = 890.8f;
     float m_BarPourcent = 4.604f;
-
+    //GreenBar
     float m_BarGreenZeroValue = 453.0658f;
     float m_BarGreenMaxValue = 890.8f;
     float m_BarGreenPourcent = 4.604f;
-
+    //OrangeBar
     float m_BarOrangeZeroValue = 453.0658f;
     float m_BarOrangeMaxValue = 890.8f;
     float m_BarOrangePourcent = 4.604f;
-
+    //DashBar
     float m_DashZeroValue = 533;
     float m_DashMaxValue = 613f;
     float m_DashPourcent = 0f;
 
+    #endregion
+
+    //The DzzledMask use to display the captain face
     public GameObject m_DazzledMask;
 
+    //The two color in reference.
     public Color m_Green;
-
     public Color m_Orange;
 
     #endregion
 
     void Start()
     {
-
+        //At this point, the player is alive, so we can disable the CaptainRespawnTimer
         m_CaptainRespawnTimer.enabled = false;
 
-        //Debug.Log(m_TresorBarFull.transform.position.x);
-
+        #region Data Bar Initialisation
+        //LifeBar
         m_BarMaxValue = m_LifeBarFull.transform.position.x;
         m_BarPourcent = (Mathf.Abs(m_BarMaxValue - m_BarZeroValue) )/ 100;
 
+        //Green & Orange Bar
         #region BarGreenOrange        
         m_GreenBar.transform.position = new Vector3(-178f, m_GreenBar.transform.position.y, m_GreenBar.transform.position.z);
         
@@ -177,19 +190,25 @@ public class UIManager : MonoBehaviour {
         m_BarOrangePourcent =-( (m_BarOrangeZeroValue - m_BarOrangeMaxValue) / 100);
         #endregion
 
-
+        //DashBar
         m_DashMaxValue = m_DashFull.transform.position.x;
         m_DashPourcent= (Mathf.Abs(m_DashMaxValue - m_DashZeroValue)) / 100;
+        #endregion
 
+        //Add the states for the StateBar, at this point there is only empty state on the StateBar
         foreach (Sprite sprite in m_StateImageData)
         {
             StateLibrary.Add(sprite.name, sprite);
             
         }
+
+        //Start the initialization of the UI
         Initialization();
     }
 
-
+    /// <summary>
+    /// Initializations of this instance.
+    /// </summary>
     public void Initialization()
     {
         m_GreenColonies.text = Game.instance.m_GreenColonies.ToString();
@@ -198,6 +217,11 @@ public class UIManager : MonoBehaviour {
 
     }
 
+    /// <summary>
+    /// Actualizes the team.
+    /// </summary>
+    /// <param name="IsGreen">if set to <c>true</c> [is green].</param>
+    /// <remarks Change the ExperienceBar in order to be with the same color than the player's team.</remarks>
     public void ActualizeTeam(bool IsGreen)
     {
         if(IsGreen)
@@ -210,6 +234,10 @@ public class UIManager : MonoBehaviour {
         }
     }
 
+    /// <summary>
+    /// Actualizes the UI clock.
+    /// </summary>
+    /// <remarks Change the m_Timer in order to be represent the correct game time .</remarks>
     public void ActualizeUIClock()
     {
         if (Game.instance.m_TimeOfPlay.minutes < 10)
@@ -239,6 +267,10 @@ public class UIManager : MonoBehaviour {
 
     }
 
+    /// <summary>
+    /// Actualizes the UI stat general.
+    /// </summary>
+    /// <remarks Change the Orange and Green compter of Shipwreck and Colonies. Actualize also the player compters (Destroy, Assist and Death) .</remarks>
     public void ActualizeUIStatGeneral()
     {
         m_OrangeShipwreck.text = Game.instance.m_DestroyCounterGameOrange.ToString();
@@ -251,7 +283,9 @@ public class UIManager : MonoBehaviour {
 
     }
 
-
+    /// <summary>
+    /// Actualizes the UI experience and leveling.
+    /// </summary>
     public void ActualizeUIExperienceAndLeveling()
     {   
         if(m_Ship.m_ShipLevel<20)
@@ -279,6 +313,9 @@ public class UIManager : MonoBehaviour {
 
     }
 
+    /// <summary>
+    /// Actualizes the UI experience and leveling end.
+    /// </summary>
     public void ActualizeUIExperienceAndLevelingEnd()
     {
         m_PlayerLevelText.text = m_Ship.m_ShipLevel.ToString();
@@ -287,6 +324,9 @@ public class UIManager : MonoBehaviour {
 
     }
 
+    /// <summary>
+    /// Actualizes the UI life.
+    /// </summary>
     public void ActualizeUILife()
     {
         m_LifeText.text = m_Ship.m_CHealthPoint.ToString() + " / " + m_Ship.m_CHealthPointBase.ToString();
@@ -303,6 +343,10 @@ public class UIManager : MonoBehaviour {
         }
 
     }
+
+    /// <summary>
+    /// Actualizes the UI tresor.
+    /// </summary>
     public void ActualizeUITresor()
     {
         m_TresorText.text = m_Ship.m_CCapacity.ToString() + " / " + m_Ship.m_CCapacityBase.ToString();
@@ -321,6 +365,9 @@ public class UIManager : MonoBehaviour {
         
     }
 
+    /// <summary>
+    /// Actualizes the UI respawn timer.
+    /// </summary>
     public void ActualizeUIRespawnTimer()
     {
         if(m_CaptainRespawnTimer.enabled == false)
@@ -358,6 +405,9 @@ public class UIManager : MonoBehaviour {
 
     }
 
+    /// <summary>
+    /// Actualizes the state of the UI.
+    /// </summary>
     public void ActualizeUIState()
     {
 
@@ -377,6 +427,11 @@ public class UIManager : MonoBehaviour {
 
     }
 
+    /// <summary>
+    /// Show or not the DazzledMask of the Captain face
+    /// </summary>
+    /// <param name="IsDazzled">if set to <c>true</c> [is dazzled].</param>
+    /// <remarks If the ship is shipwreck, the dazzled is not show.</remarks>
     public void ActualizeDazzled(bool IsDazzled)
     {
         if(IsDazzled==true)
@@ -389,6 +444,11 @@ public class UIManager : MonoBehaviour {
         }
     }
 
+    /// <summary>
+    /// Shows the experience.
+    /// </summary>
+    /// <param name="show">if set to <c>true</c> [show].</param>
+    /// <remarks Disable the experience bar if the player reach the maximum level.</remarks>
     public void ShowExperience(bool show)
     {
        m_ExperienceText.enabled = show;
@@ -397,6 +457,9 @@ public class UIManager : MonoBehaviour {
 
     }
 
+    /// <summary>
+    /// Actualises the global tresors.
+    /// </summary>
     public void ActualiseGlobalTresors()
     {
 
@@ -425,6 +488,9 @@ public class UIManager : MonoBehaviour {
 
     }
 
+    /// <summary>
+    /// Actualizes the UI material.
+    /// </summary>
     public void ActualizeUIMaterial()
     {
         m_MaterialNumber.text = m_Ship.m_MaterialNumber.ToString();
@@ -434,6 +500,9 @@ public class UIManager : MonoBehaviour {
         }
     }
 
+    /// <summary>
+    /// Actualizes the UI dash bar.
+    /// </summary>
     public void ActualizeUIDashBar()
     {
 
@@ -450,11 +519,20 @@ public class UIManager : MonoBehaviour {
         }
     }
 
+    /// <summary>
+    /// If the player press a button with the mouse
+    /// </summary>
+    /// <param name="number">The number.</param>
     public void ButtonAction(int number)
     {
         m_Ship.m_ShipEquipementBehavior.ButtonAction(number);
     }
 
+    /// <summary>
+    /// Initializes the action bar.
+    /// </summary>
+    /// <param name="number">The number.</param>
+    /// <param name="weapon">The weapon.</param>
     public void InitializeActionBar(int number, WeaponList weapon)
     {
         int index = -1;
@@ -486,6 +564,12 @@ public class UIManager : MonoBehaviour {
 
     }
 
+    /// <summary>
+    /// Actualizes the cooldown of the bouton.
+    /// </summary>
+    /// <param name="number">The number.</param>
+    /// <param name="pourcent">The pourcent.</param>
+    /// <param name="cooldown">The cooldown.</param>
     public void ActualizeAction(int number, float pourcent, int cooldown)
     {
         cooldown += 1;
@@ -506,6 +590,11 @@ public class UIManager : MonoBehaviour {
         }
     }
 
+    /// <summary>
+    /// Anim the Button the player just pressed
+    /// </summary>
+    /// <param name="number">The number of the button [0->3].</param>
+    /// <param name="state">The state of the button for the animation [Use/Ready] .</param>
     public void ButtonActionAnimator(int number, string state)
     {
         if(state=="Use")

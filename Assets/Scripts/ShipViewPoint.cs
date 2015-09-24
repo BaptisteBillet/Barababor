@@ -15,12 +15,20 @@ public enum AimsMode
 
 }
 
+/// <summary>
+/// This class manage the differents aims of the 
+/// </summary>
 public class ShipViewPoint : MonoBehaviour {
 
+    //All the Aims
     public GameObject m_StraightAims;
     Vector3 m_StraightAimsBase;
 
+    //Others are coming
 
+    //
+
+    //The reference to the ship
     Ship m_Ship;
 
 	// Use this for initialization
@@ -31,7 +39,12 @@ public class ShipViewPoint : MonoBehaviour {
         m_StraightAimsBase = m_StraightAims.transform.localScale;
     }
 
-
+    /// <summary>
+    /// Starts to aims.
+    /// </summary>
+    /// <param name="aimsMode">The aims mode.</param>
+    /// <param name="range">The range.</param>
+    /// <param name="width">The width.</param>
     public void StartToAims(AimsMode aimsMode, float range, float width)
     {
         //Begin by reset all aims
@@ -50,6 +63,9 @@ public class ShipViewPoint : MonoBehaviour {
         
     }
 
+    /// <summary>
+    /// Resets all aims.
+    /// </summary>
     public void ResetAllAims()
     {
         m_StraightAims.transform.localScale = m_StraightAimsBase;

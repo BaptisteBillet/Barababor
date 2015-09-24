@@ -3,6 +3,9 @@ using System.Collections;
 using System.Collections.Generic;
 
 
+/// <summary>
+/// The public enum of the weapon
+/// </summary>
 public enum WeaponList
 {
     LeBonVieuxCanonDesFamilles,
@@ -11,6 +14,11 @@ public enum WeaponList
     None
 }
 
+
+/// <summary>
+/// The class allow their users to use a Dictionary instead of the Google2U system, who is a bit annoying to use.
+/// Moreover, the dictionnaries are sort.
+/// </summary>
 public class TriDataBase : MonoBehaviour
 {
     public Dictionary<string, Element> m_BowDico = new Dictionary<string, Element>();
@@ -22,7 +30,7 @@ public class TriDataBase : MonoBehaviour
     public Dictionary<string, Equipment> m_WeaponDico = new Dictionary<string, Equipment>();
     public Dictionary<string, Equipment> m_SpecialistDico = new Dictionary<string, Equipment>();
 
-
+    //This class is a singleton
     #region Singleton
     static private TriDataBase s_Instance;
     static public TriDataBase instance
@@ -39,6 +47,7 @@ public class TriDataBase : MonoBehaviour
             s_Instance = this;
         //DontDestroyOnLoad(this);
 
+        //Sort all Elements
         #region Element
         foreach (Google2u.BOWRow row in Google2u.BOW.Instance.Rows)
         {
@@ -148,7 +157,7 @@ public class TriDataBase : MonoBehaviour
             m_SternDico.Add(m_Element.m_Name, m_Element);
         }
         #endregion
-
+        //Sort all Equipements
         #region Equipement
         foreach (Google2u.WEAPONRow row in Google2u.WEAPON.Instance.Rows)
         {

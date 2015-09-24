@@ -1,16 +1,28 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-[SerializeField]
+/// <summary>
+/// The State class manage all the state
+/// A new State GameObject is create for every state the ship has. 
+/// This class manage itself, and then destoy itself;
+/// However, the state can be destroy by the ship.
+/// </summary>
 public class State : MonoBehaviour {
 
+    #region Members declaration
+    //The kind of state
     public ShipStateAndDamageBehavior.EState m_State;
+    //THe value of state modificator
     public int m_Value;
+    //The Time during wich the state will be effective
     public float m_Time;
+    //The actuak 
     public float m_Cooldown;
 
+    //The access to the ship
     public Ship m_Ship;
 
+    //Only for some specifics states
     const int m_ONFIREDAMAGE=6;
     const int m_HULLBREACHVALUE=1;
 
@@ -19,6 +31,8 @@ public class State : MonoBehaviour {
 
     float m_Timer;
     float m_Delay;
+    //
+    #endregion
 
     void OnEnable()
     {
@@ -26,10 +40,7 @@ public class State : MonoBehaviour {
         m_Delay = 1;
 
         StartCoroutine(CStat());
-
-       
     }
-
   
     IEnumerator CStat()
     {

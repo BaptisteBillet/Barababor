@@ -1,8 +1,15 @@
 ﻿using UnityEngine;
 using System.Collections;
 
+/// <summary>
+/// The StateBox is a intern tool to test some modification in the game
+/// For Example, the state box can change the state of the colliding ship, or damage him...
+/// </summary>
 public class StateBox : MonoBehaviour {
 
+
+    #region Members Declaration
+    //All the states
     [Space(10)]
     public bool BOOSTED;
     public int Value0;
@@ -74,22 +81,28 @@ public class StateBox : MonoBehaviour {
     public bool TERMITE;
     public int Value22;
     public float Time22;
+    //The damages
     [Space(10)]
     public int m_Damages;
+    //The experiences
     [Space(10)]
     public int m_Experiences;
+    //The level
     [Space(10)]
     public int m_Leveling;
 
+    //The array for the states
     private bool[] ArrayOfBool = new bool[23];
 
-
+    //The State prefab
     public GameObject go_State;
     State sb_State;
 
     ShipStateAndDamageBehavior.EState m_State;
     int m_Value;
     float m_Time;
+    #endregion
+
     /// <summary>
     /// Starts this instance.
     /// </summary>
@@ -108,6 +121,7 @@ public class StateBox : MonoBehaviour {
         if(other.tag=="Player")
         {
             Ship m_Ship = other.gameObject.GetComponent<Ship>();
+
             //Damages
             if(m_Damages>0)
             {
@@ -127,6 +141,7 @@ public class StateBox : MonoBehaviour {
                 }
                 
             }
+            #region States
             //States
             for (int i=0; i<ArrayOfBool.Length;i++)
             {
@@ -281,10 +296,9 @@ public class StateBox : MonoBehaviour {
                 }
 
             }
-            
+            #endregion
 
-
-
+            //After the collision, the state box is destroy
             Destroy(transform.parent.gameObject);
         }
     }

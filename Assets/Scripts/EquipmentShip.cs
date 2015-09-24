@@ -249,17 +249,6 @@ public class EquipmentShip : MonoBehaviour {
 
                 lanceur = m_ShipEquipmentBehavior.m_DirectionScript.gameObject;
 
-
-                Debug.Log(lanceur.transform.rotation.eulerAngles);
-
-                float angle = lanceur.transform.rotation.eulerAngles.y;
-
-                float x = Mathf.Abs(Mathf.Cos(angle* Mathf.Deg2Rad));
-                float z = Mathf.Abs(Mathf.Sin(angle* Mathf.Deg2Rad));
-
-                Debug.Log(x + "    " + z);
-                               
-
                 for (int i=0;i< m_Width+1;i++)
                 {
                     if(i==0)
@@ -267,10 +256,15 @@ public class EquipmentShip : MonoBehaviour {
                         bulletInstance = Instantiate(bullet, new Vector3(bullet.transform.position.x, lanceur.transform.position.y+1, lanceur.transform.position.z), lanceur.transform.rotation) as GameObject;
                     }
                     else
-                    {
-                        bulletInstance = Instantiate(bullet, new Vector3((bullet.transform.position.x)+i*x , lanceur.transform.position.y+1, (lanceur.transform.position.z)+i*z), lanceur.transform.rotation) as GameObject;
-
-                        bulletInstance = Instantiate(bullet, new Vector3((bullet.transform.position.x)-i*x, lanceur.transform.position.y+1, (lanceur.transform.position.z)-i*z), lanceur.transform.rotation) as GameObject;
+                    { 
+                        bulletInstance = Instantiate(bullet, new Vector3(lanceur.transform.position.x, lanceur.transform.position.y+1, lanceur.transform.position.z), lanceur.transform.rotation) as GameObject;
+                        //bulletInstance.transform.position = lanceur.transform.InverseTransformDirection(lanceur.transform.right) * i;
+                        //bulletInstance.transform.position = lanceur.transform.right* i;
+                        bulletInstance.transform.position += lanceur.transform.right*i;
+                        bulletInstance = Instantiate(bullet, new Vector3(lanceur.transform.position.x, lanceur.transform.position.y+1, lanceur.transform.position.z), lanceur.transform.rotation) as GameObject;
+                        //bulletInstance.transform.position = lanceur.transform.InverseTransformDirection(lanceur.transform.right) * -i;
+                        //bulletInstance.transform.position = lanceur.transform.right * -i;
+                        bulletInstance.transform.position += lanceur.transform.right * -i;
                     }
                 }
 
